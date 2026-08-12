@@ -66,9 +66,20 @@
 <!-- 替换前 -->
 <img src="https://via.placeholder.com/600x340/1a1a2e/ffffff?text=Demo+GIF+Coming+Soon">
 
-<!-- 替换后 -->
-<img src="assets/wechat-demo.gif" alt="WeChat AI Bot Demo" width="600">
+<!-- 替换后（架构图已生成） -->
+<img src="assets/architecture.svg" alt="WeChat AI Bot Architecture" width="700">
 ```
+
+---
+
+## ✅ 当前素材状态
+
+| 素材 | 文件名 | 状态 |
+|------|--------|------|
+| 系统架构图 | `architecture.svg` | ✅ 已生成（900×620 SVG） |
+| 微信对话 GIF | `wechat-demo.gif` | ⏳ 待录制 |
+| 主界面截图 | `main-interface.png` | ⏳ 待截图 |
+| 功能特性图 | `features.png` | ⏳ 待生成 |
 
 ---
 

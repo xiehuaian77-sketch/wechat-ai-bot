@@ -41,11 +41,10 @@
 ## 🎬 15 秒看懂它能做什么
 
 <p align="center">
-  <!-- TODO: 录制 Demo GIF 后替换下方 src，参考 DEMO_GUIDE.md -->
-  <img src="assets/wechat-demo.gif" alt="Demo GIF" width="600">
+  <img src="assets/architecture.svg" alt="WeChat AI Bot Architecture" width="700">
 </p>
 
-> **演示视频筹备中**，欢迎先 Star 关注：[Bilibili](https://www.bilibili.com) | [YouTube](https://www.youtube.com)
+> **架构一目了然**：微信消息 → FastAPI → LangGraph Agent / RAG 知识库 / 管理 API → 32+ AI 模型 + ChromaDB
 
 **3 个核心场景**：
 1. **🤖 智能对话**：发微信给 Bot，自动调用 GPT-4 / DeepSeek / Claude 回复，支持多轮上下文
@@ -53,6 +52,10 @@
 3. **📚 知识库问答**：上传 PDF/Word/CSV，秒变专属 RAG 知识库，微信里直接提问
 
 ---
+
+<p align="center">
+  <img src="assets/features.svg" alt="Core Features" width="900">
+</p>
 
 ## ⚡️ 为什么选择 WeChat AI Bot？
 
