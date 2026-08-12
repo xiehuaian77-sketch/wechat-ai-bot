@@ -67,6 +67,18 @@ docs: update README with deployment steps
 | 🎨 UI/UX | 前端界面优化 | `ui` |
 | 🔧 DevOps | Docker、CI/CD、监控 | `devops` |
 | 🧪 测试 | 单元测试、集成测试 | `testing` |
+| 🎭 Chatflow | 新增或优化人设编排 | `chatflow` |
+
+### Chatflow 贡献指南
+
+欢迎贡献新的 Chatflow 模板或优化现有模板！
+
+1. **新增模板**：在 `config/chatflow/` 目录下创建 `.yaml` 文件
+2. **测试模板**：使用管理后台的 Chatflow 编辑器测试
+3. **提交 PR**：标签使用 `chatflow`
+4. **文档说明**：在 PR 描述中说明模板的用途和配置示例
+
+参考 [Chatflow 文档](docs/chatflow.md) 了解详细配置。
 
 ## 💡 没有头绪？
 

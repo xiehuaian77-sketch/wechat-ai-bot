@@ -1,55 +1,148 @@
-# Security Policy
+# 安全与合规
 
-## Reporting a Vulnerability
+WeChat AI Bot 是一个基于 ComWeChatRobot 的 AI 微信助手框架。使用本项目的用户需要了解以下安全与合规要点。
 
-If you discover a security vulnerability in this project, please report it responsibly.
+---
 
-**Please do NOT open a public GitHub issue for security vulnerabilities.**
+## 🔒 安全特性
 
-Instead, please send an email to the maintainers or open a private security advisory through GitHub Security tab.
+### 数据安全
+- **本地存储优先**：所有对话历史、向量数据默认存储在本地 SQLite + ChromaDB，不上传云端
+- **密钥隔离**：API Key 通过 `.env` 管理，不写入代码仓库，不上传到任何第三方服务
+- **权限控制**：支持管理员白名单/黑名单，防止未授权访问
+- **限流保护**：内置熔断器 + 自动重连 + 限流机制，防止 API 滥用
 
-### What to Include
+### 隐私保护
+- **P2P 对话隔离**：管理员可配置用户私聊权限，避免公共会话泄露
+- **敏感信息过滤**：日志系统自动脱敏 API Key、Token 等凭证信息
+- **可审计日志**：所有 API 调用和消息事件均有结构化日志，支持安全审计
 
-- Description of the vulnerability
-- Steps to reproduce
-- Potential impact
-- Suggested fix (if any)
+### 部署安全
+- **Docker 隔离**：所有服务运行在容器内，宿主机仅暴露必要端口
+- **Nginx 反向代理**：支持 HTTPS 配置，API 通信加密
+- **环境变量管理**：生产环境推荐使用 Docker Secrets 或环境变量注入
 
-### Response Timeline
+---
 
-- **Within 48 hours**: Acknowledge receipt of your report
-- **Within 7 days**: Provide initial assessment and remediation plan
-- **Within 30 days**: Release a patch or mitigation
+## ⚠️ 风险提示
 
-## Security Best Practices
+### 1. 微信封号风险
 
-### For Users
+**重要**：本项目通过 ComWeChatRobot 框架实现微信 PC 客户端自动化，存在一定的封号风险。
 
-1. **Never expose your `.env` file** — It contains sensitive API keys and secrets
-2. **Use strong `JWT_SECRET_KEY`** — Generate a cryptographically secure random key
-3. **Enable HTTPS in production** — Never run without TLS in production
-4. **Restrict CORS origins** — Only allow trusted domains
-5. **Keep dependencies updated** — Regularly run `pip audit` and update packages
+| 风险因素 | 影响等级 | 缓解措施 |
+|----------|----------|----------|
+| 高频消息发送 | 🔴 高 | 内置限流 + 随机延迟 + 白名单机制 |
+| 非正常操作行为 | 🔴 高 | 模拟人工操作间隔，避免批量操作 |
+| 多开/多实例 | 🟡 中 | 单实例多 Bot 架构，避免多开 |
+| 敏感内容回复 | 🟡 中 | 内置内容过滤 + 管理员审核 |
 
-### For Contributors
+**建议**：
+- 仅在个人号上测试使用，避免在主号上部署
+- 开启白名单机制，仅允许信任的用户与 Bot 交互
+- 监控日志，发现异常及时调整策略
+- 遵守微信用户协议，不用于商业营销或骚扰行为
 
-1. **Never commit secrets** — Use `.env.example` as template, never include real credentials
-2. **Validate all inputs** — Use Pydantic models for request validation
-3. **Use parameterized queries** — Prevent SQL injection via SQLAlchemy ORM
-4. **Log security events** — Authentication failures, permission denials, etc.
-5. **Rate limiting** — The app includes rate limiting middleware, respect it
+### 2. AI 内容合规
 
-## Supported Versions
+- AI 生成的内容可能包含错误信息或不当言论，请人工审核后转发
+- 建议配置内容过滤规则，避免回复敏感话题
+- 知识库上传的文档请确保拥有版权或授权
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 0.1.x   | ✅ Yes             |
-| < 0.1   | ❌ No              |
+### 3. API 密钥安全
 
-## Security Audit
+- **不要**将 `.env` 文件提交到 Git
+- **不要**在代码中硬编码 API Key
+- 定期轮换 API Key，特别是在团队协作场景
+- 使用具有最小权限的 API Key（仅启用需要的模型）
 
-This project undergoes periodic security audits. See [SECURITY_AUDIT.md](SECURITY_AUDIT.md) for the latest audit results.
+### 4. 数据备份
 
-## Dependencies Security
+- 定期备份 SQLite 数据库和 ChromaDB 向量数据
+- Docker 部署时建议挂载 volume 持久化存储
+- 生产环境考虑使用 PostgreSQL + 外部向量数据库
 
-We use `pip-audit` in CI to scan for known vulnerabilities in dependencies. Results are available in each CI run.
+---
+
+## 🛡️ 安全最佳实践
+
+### 1. 白名单机制（必开）
+
+```bash
+# .env
+ENABLE_WHITELIST=true
+WHITELIST_USERS=wxid_123,wxid_456  # 仅允许这些用户
+```
+
+### 2. 限流配置
+
+```bash
+# .env
+RATE_LIMIT=10  # 每分钟最多 10 条消息
+RATE_LIMIT_WINDOW=60  # 限流窗口（秒）
+```
+
+### 3. 日志脱敏
+
+```bash
+# .env
+LOG_LEVEL=INFO  # 生产环境建议 INFO，开发环境可用 DEBUG
+REDACT_SENSITIVE=true  # 自动脱敏 API Key、Token
+```
+
+### 4. 网络隔离
+
+- 生产环境不要将 FastAPI 端口（8000）直接暴露到公网
+- 使用 Nginx 反向代理 + HTTPS
+- Docker Compose 使用内部网络隔离
+
+---
+
+## 📋 安全审计清单
+
+在首次部署前，请确认以下安全配置：
+
+- [ ] `.env` 文件已配置，未提交到 Git
+- [ ] `ENABLE_WHITELIST=true` 已开启
+- [ ] `WHITELIST_USERS` 已填写信任用户列表
+- [ ] `RATE_LIMIT` 已配置合理值
+- [ ] `LOG_LEVEL=INFO`（生产环境）
+- [ ] Docker 端口仅暴露必要端口
+- [ ] HTTPS 已配置（生产环境）
+- [ ] 已设置定期备份策略
+- [ ] API Key 具有最小权限
+- [ ] 已测试封号风险缓解措施
+
+---
+
+## 🚨 漏洞报告
+
+如果你发现安全漏洞，请通过以下方式报告：
+
+1. **GitHub Security Advisory**：在仓库的 "Security" 标签页提交 Private vulnerability report
+2. **邮件**：发送邮件至 security@your-domain.com（请替换为实际邮箱）
+3. **不要**在公开 Issue 中披露安全漏洞
+
+我们会在 48 小时内响应，并在修复后发布安全公告。
+
+---
+
+## 📜 合规声明
+
+1. **本项目的合法性**：本项目仅提供技术框架，使用者需自行遵守当地法律法规和微信用户协议
+2. **AI 生成内容**：AI 生成的内容不代表本项目立场，使用者需自行承担内容责任
+3. **第三方服务**：本项目集成了第三方 AI 服务（OpenAI、DeepSeek 等），使用前请阅读其服务条款
+4. **许可证**：本项目采用 MIT License，详见 [LICENSE](LICENSE) 文件
+
+---
+
+## 📚 参考资料
+
+- [ComWeChatRobot 使用条款](https://github.com/WeChat-Shot/ComWeChatRobot)
+- [微信个人账号使用规范](https://weixin.qq.com/cgi-bin/readtemplate?t=weixin_agreement&s=default)
+- [OpenAI 使用政策](https://openai.com/policies/usage-policies)
+- [MIT License 说明](https://opensource.org/licenses/MIT)
+
+---
+
+最后更新：2026-08-12

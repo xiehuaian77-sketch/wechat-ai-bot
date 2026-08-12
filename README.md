@@ -139,16 +139,17 @@ graph TB
         M --> N[天气/搜索/代码/汇率]
 
         G --> O[ChromaDB 向量库]
+        H --> P[用户/权限管理]
     end
 
     subgraph "外部服务"
-        P[OpenAI / DeepSeek / Claude / Gemini]
-        Q[ Tavily / SerpApi ]
+        Q[OpenAI / DeepSeek / Claude / Gemini]
+        R[Tavily / SerpApi]
     end
 
-    F --> P
-    M --> P
+    F --> Q
     M --> Q
+    M --> R
 ```
 
 **技术栈**：
@@ -158,6 +159,70 @@ graph TB
 - **数据库**：SQLAlchemy 2.0 + aiosqlite（对话历史、权限、日志）
 - **配置管理**：Pydantic v2 Settings（环境变量 + `.env`）
 - **部署**：Docker Compose（一键启动 + Nginx 反向代理）
+
+### 🛡️ 安全架构
+
+```mermaid
+graph LR
+    A[微信消息] --> B{白名单检查}
+    B -->|未授权| C[拒绝访问]
+    B -->|已授权| D{限流检查}
+    D -->|超限| E[返回限流提示]
+    D -->|正常| F[消息处理]
+    F --> G{内容过滤}
+    G -->|敏感内容| H[过滤拦截]
+    G -->|正常| I[AI 处理]
+    I --> J[日志脱敏]
+    J --> K[返回用户]
+```
+
+**安全特性**：
+- **白名单机制**：仅允许授权用户与 Bot 交互，防止滥用
+- **限流保护**：每分钟最大消息数限制，防止 API 滥用
+- **内容过滤**：内置敏感词过滤，避免违规内容
+- **日志脱敏**：自动脱敏 API Key、Token 等敏感信息
+- **数据本地化**：所有数据存储在本地，不上传云端
+
+### 🚀 多节点部署（生产环境）
+
+```mermaid
+graph TB
+    subgraph "负载均衡"
+        A[Cloudflare Worker] --> B[轮询分流]
+        B --> C[健康检查]
+    end
+
+    subgraph "应用节点"
+        D[Node-1] --> E[FastAPI]
+        F[Node-2] --> G[FastAPI]
+        H[Node-3] --> I[FastAPI]
+    end
+
+    subgraph "共享数据层"
+        J[Redis] --> K[会话状态]
+        L[ChromaDB] --> M[向量数据]
+    end
+
+    A --> D
+    A --> F
+    A --> H
+
+    E --> J
+    G --> J
+    I --> J
+
+    E --> L
+    G --> L
+    I --> L
+```
+
+**多节点优势**：
+- **高可用**：单节点故障不影响整体服务
+- **弹性扩容**：根据流量动态增减节点
+- **无状态设计**：所有节点运行同一镜像，配置完全一致
+- **源站隐藏**：IP 仅存储在 Worker 中，避免被直接攻击
+
+参考 [多节点部署指南](multi-node.md) 了解详细配置。
 
 ---
 
@@ -227,6 +292,20 @@ graph TB
 | ⑦ | 管理后台 + 权限控制 + 限流 | ✅ 完成 |
 | ⑧ | 生产部署（Docker + CI/CD） | 🔜 进行中 |
 | ⑨ | 多模态支持（图片/语音 + 一键分发） | 📋 规划中 |
+
+## 📚 文档
+
+完整的文档请查看 [docs/](docs/README.md)：
+
+- [快速开始](README.md) - 5 分钟部署
+- [Docker 部署](docs/docker.md) - 一键部署完整环境
+- [多节点部署](docs/multi-node.md) - 生产环境高可用架构
+- [配置说明](docs/configuration.md) - 所有环境变量详解
+- [管理后台 API](docs/admin-api.md) - REST API 文档
+- [Chatflow 编排](docs/chatflow.md) - 可视化人设编排
+- [运维手册](docs/runbook.md) - 日常运维与故障排查
+- [安全与合规](SECURITY.md) - 安全特性与风险提示
+- [合规使用指南](COMPLIANCE.md) - 合规原则与最佳实践
 
 ---
 
