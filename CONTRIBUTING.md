@@ -14,7 +14,7 @@
 
 ```bash
 # 克隆仓库
-git clone https://github.com/your-username/wechat-ai-bot.git
+git clone https://github.com/xiehuaian77-sketch/wechat-ai-bot.git
 cd wechat-ai-bot
 
 # 安装依赖（推荐使用 uv）
@@ -70,7 +70,7 @@ docs: update README with deployment steps
 
 ## 💡 没有头绪？
 
-看看我们的 [Ideas 列表](https://github.com/your-username/wechat-ai-bot/discussions/categories/ideas) 或 [Good First Issues](https://github.com/your-username/wechat-ai-bot/labels/good%20first%20issue)。
+看看我们的 [Ideas 列表](https://github.com/xiehuaian77-sketch/wechat-ai-bot/discussions/categories/ideas) 或 [Good First Issues](https://github.com/xiehuaian77-sketch/wechat-ai-bot/labels/good%20first%20issue)。
 
 ## 🤝 行为准则
 
@@ -78,6 +78,6 @@ docs: update README with deployment steps
 
 ## ❓ 问题与讨论
 
-- **Bug 报告**：[GitHub Issues](https://github.com/your-username/wechat-ai-bot/issues)
-- **功能请求**：[GitHub Discussions](https://github.com/your-username/wechat-ai-bot/discussions)
+- **Bug 报告**：[GitHub Issues](https://github.com/xiehuaian77-sketch/wechat-ai-bot/issues)
+- **功能请求**：[GitHub Discussions](https://github.com/xiehuaian77-sketch/wechat-ai-bot/discussions)
 - **技术交流**：欢迎在 Discussions 中发起讨论

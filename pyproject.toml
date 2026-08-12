@@ -23,9 +23,9 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 [project.urls]
-Homepage = "https://github.com/xiehuaian77-sketch/neural-ai-browser"
-Repository = "https://github.com/xiehuaian77-sketch/neural-ai-browser"
-"Bug Tracker" = "https://github.com/xiehuaian77-sketch/neural-ai-browser/issues"
+Homepage = "https://github.com/xiehuaian77-sketch/wechat-ai-bot"
+Repository = "https://github.com/xiehuaian77-sketch/wechat-ai-bot"
+"Bug Tracker" = "https://github.com/xiehuaian77-sketch/wechat-ai-bot/issues"
 dependencies = [
     # ---- Web Framework ----
     "fastapi>=0.115.0",

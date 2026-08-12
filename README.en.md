@@ -1,6 +1,6 @@
 <p align="center">
-  <img src="https://img.shields.io/github/stars/your-username/wechat-ai-bot?style=for-the-badge&color=ff6b6b" alt="Stars">
-  <img src="https://img.shields.io/github/forks/your-username/wechat-ai-bot?style=for-the-badge&color=4ecdc4" alt="Forks">
+  <img src="https://img.shields.io/github/stars/xiehuaian77-sketch/wechat-ai-bot?style=for-the-badge&color=ff6b6b" alt="Stars">
+  <img src="https://img.shields.io/github/forks/xiehuaian77-sketch/wechat-ai-bot?style=for-the-badge&color=4ecdc4" alt="Forks">
   <img src="https://img.shields.io/badge/python-3.12%2B-blue?style=for-the-badge" alt="Python">
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="License">
   <img src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=for-the-badge" alt="PRs">
@@ -18,16 +18,16 @@
 </p>
 
 <p align="center">
-  <a href="https://huggingface.co/spaces/your-username/wechat-ai-bot">
+  <a href="https://huggingface.co/spaces/xiehuaian77-sketch/wechat-ai-bot">
     <img src="https://img.shields.io/badge/🚀_Try_it-HuggingFace_Space-yellow?style=for-the-badge" alt="Demo">
   </a>
-  <a href="https://github.com/your-username/wechat-ai-bot/blob/main/README.en.md">
+  <a href="https://github.com/xiehuaian77-sketch/wechat-ai-bot/blob/main/README.en.md">
     <img src="https://img.shields.io/badge/📖_Docs-English-green?style=for-the-badge" alt="Docs">
   </a>
-  <a href="https://github.com/your-username/wechat-ai-bot/blob/main/CONTRIBUTING.md">
+  <a href="https://github.com/xiehuaian77-sketch/wechat-ai-bot/blob/main/CONTRIBUTING.md">
     <img src="https://img.shields.io/badge/🤝_Contribute-Guide-orange?style=for-the-badge" alt="Contributing">
   </a>
-  <a href="https://github.com/your-username/wechat-ai-bot/issues">
+  <a href="https://github.com/xiehuaian77-sketch/wechat-ai-bot/issues">
     <img src="https://img.shields.io/badge/🐛_Issues-Report-red?style=for-the-badge" alt="Issues">
   </a>
 </p>
@@ -37,10 +37,11 @@
 ## 🎬 See it in action
 
 <p align="center">
-  <img src="https://media.giphy.com/media/..." alt="Demo GIF" width="600">
+  <!-- TODO: Record demo GIF and replace src below -->
+  <img src="https://via.placeholder.com/600x340/1a1a2e/ffffff?text=Demo+GIF+Coming+Soon" alt="Demo GIF" width="600">
 </p>
 
-> **If the GIF is slow**, watch this 1-minute video: [Bilibili Demo](https://www.bilibili.com/video/BV1xx411c7mD) | [YouTube Demo](https://youtu.be/xxxxx)
+> **Demo video coming soon**. Star the repo to stay updated: [Bilibili](https://www.bilibili.com) | [YouTube](https://www.youtube.com)
 
 **3 core scenarios**:
 1. **🤖 Smart Chat**: Send a message to the bot, and it automatically calls GPT-4 / DeepSeek / Claude to reply with multi-turn context
@@ -75,7 +76,7 @@
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/your-username/wechat-ai-bot.git
+git clone https://github.com/xiehuaian77-sketch/wechat-ai-bot.git
 cd wechat-ai-bot
 uv sync
 ```
@@ -247,7 +248,7 @@ We welcome all forms of contribution! Whether it's bug fixes, new features, docu
 
 ### 💡 No ideas?
 
-Check our [Ideas list](https://github.com/your-username/wechat-ai-bot/discussions/categories/ideas) or [Good First Issues](https://github.com/your-username/wechat-ai-bot/labels/good%20first%20issue).
+Check our [Ideas list](https://github.com/xiehuaian77-sketch/wechat-ai-bot/discussions/categories/ideas) or [Good First Issues](https://github.com/xiehuaian77-sketch/wechat-ai-bot/labels/good%20first%20issue).
 
 ---
 
@@ -255,10 +256,10 @@ Check our [Ideas list](https://github.com/your-username/wechat-ai-bot/discussion
 
 ### Join the discussion
 
-- **GitHub Discussions**: [Ask questions, share use cases, request features](https://github.com/your-username/wechat-ai-bot/discussions)
-- **Twitter/X**: [@your_handle](https://twitter.com/your_handle) — Follow for updates
-- **Juejin**: [Technical blog series](https://juejin.cn/user/your-id) — Architecture design and实战教程
-- **V2EX**: [Project discussion thread](https://www.v2ex.com/t/xxxxxx)
+- **GitHub Discussions**: [Ask questions, share use cases, request features](https://github.com/xiehuaian77-sketch/wechat-ai-bot/discussions)
+- **Twitter/X**: [@xiehuaian77](https://twitter.com/xiehuaian77) — Follow for updates
+- **Juejin**: [Technical blog series](https://juejin.cn/user/713649897585054) — Architecture design and tutorials
+- **V2EX**: [Project discussion thread](https://www.v2ex.com/t/wechat-ai-bot) — Join the conversation
 
 ### If you like this project
 
@@ -279,13 +280,13 @@ Check our [Ideas list](https://github.com/your-username/wechat-ai-bot/discussion
 
 ## 📄 License
 
-MIT © [your-username](https://github.com/your-username)
+MIT © [xiehuaian77-sketch](https://github.com/xiehuaian77-sketch)
 
 ---
 
 ## 🙏 Acknowledgments
 
-- [ComWeChatRobot](https://github.com/your-username/ComWeChatRobot) — WeChat PC client automation framework
+- [ComWeChatRobot](https://github.com/WeChat-Shot/ComWeChatRobot) — WeChat PC client automation framework
 - [LangChain](https://python.langchain.com/) + [LangGraph](https://langchain-ai.github.io/langgraph/) — AI Agent orchestration engine
 - [ChromaDB](https://www.trychroma.com/) — Vector database
 - [FastAPI](https://fastapi.tiangolo.com/) — Modern Python web framework
@@ -293,14 +294,15 @@ MIT © [your-username](https://github.com/your-username)
 ---
 
 <p align="center">
-  <a href="https://huggingface.co/spaces/your-username/wechat-ai-bot">
+  <!-- TODO: Deploy to HuggingFace Space, then enable below -->
+  <!-- <a href="https://huggingface.co/spaces/xiehuaian77-sketch/wechat-ai-bot">
     <img src="https://img.shields.io/badge/🚀_Try_it-HuggingFace_Space-yellow?style=for-the-badge" alt="Demo">
-  </a>
-  <a href="https://github.com/your-username/wechat-ai-bot">
+  </a> -->
+  <a href="https://github.com/xiehuaian77-sketch/wechat-ai-bot">
     <img src="https://img.shields.io/badge/⭐_Star_Us_on_Github-ff6b6b?style=for-the-badge" alt="Star">
   </a>
 </p>
 
 <p align="center">
-  Made with ❤️ by <a href="https://github.com/your-username">your-username</a> and <a href="https://github.com/your-username/wechat-ai-bot/graphs/contributors">contributors</a>
+  Made with ❤️ by <a href="https://github.com/xiehuaian77-sketch">xiehuaian77-sketch</a> and <a href="https://github.com/xiehuaian77-sketch/wechat-ai-bot/graphs/contributors">contributors</a>
 </p>

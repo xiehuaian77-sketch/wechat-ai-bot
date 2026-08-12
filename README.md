@@ -1,6 +1,6 @@
 <p align="center">
-  <img src="https://img.shields.io/github/stars/your-username/wechat-ai-bot?style=for-the-badge&color=ff6b6b" alt="Stars">
-  <img src="https://img.shields.io/github/forks/your-username/wechat-ai-bot?style=for-the-badge&color=4ecdc4" alt="Forks">
+  <img src="https://img.shields.io/github/stars/xiehuaian77-sketch/wechat-ai-bot?style=for-the-badge&color=ff6b6b" alt="Stars">
+  <img src="https://img.shields.io/github/forks/xiehuaian77-sketch/wechat-ai-bot?style=for-the-badge&color=4ecdc4" alt="Forks">
   <img src="https://img.shields.io/badge/python-3.12%2B-blue?style=for-the-badge" alt="Python">
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="License">
   <img src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=for-the-badge" alt="PRs">
@@ -18,16 +18,20 @@
 </p>
 
 <p align="center">
-  <a href="https://huggingface.co/spaces/your-username/wechat-ai-bot">
+  <img src="https://img.shields.io/badge/🚀_Demo-待部署-red?style=for-the-badge" alt="Demo">
+</p>
+
+<!-- TODO: 部署到 HuggingFace Space 后替换下方链接 -->
+<!-- <a href="https://huggingface.co/spaces/xiehuaian77-sketch/wechat-ai-bot">
     <img src="https://img.shields.io/badge/🚀_一键体验-HuggingFace_Space-yellow?style=for-the-badge" alt="Demo">
-  </a>
-  <a href="https://github.com/your-username/wechat-ai-bot/blob/main/README.md">
+  </a> -->
+  <a href="https://github.com/xiehuaian77-sketch/wechat-ai-bot/blob/main/README.md">
     <img src="https://img.shields.io/badge/📖_文档-中文-green?style=for-the-badge" alt="Docs">
   </a>
-  <a href="https://github.com/your-username/wechat-ai-bot/blob/main/CONTRIBUTING.md">
+  <a href="https://github.com/xiehuaian77-sketch/wechat-ai-bot/blob/main/CONTRIBUTING.md">
     <img src="https://img.shields.io/badge/🤝_贡献-指南-orange?style=for-the-badge" alt="Contributing">
   </a>
-  <a href="https://github.com/your-username/wechat-ai-bot/issues">
+  <a href="https://github.com/xiehuaian77-sketch/wechat-ai-bot/issues">
     <img src="https://img.shields.io/badge/🐛_问题-反馈-red?style=for-the-badge" alt="Issues">
   </a>
 </p>
@@ -37,10 +41,11 @@
 ## 🎬 15 秒看懂它能做什么
 
 <p align="center">
-  <img src="https://media.giphy.com/media/..." alt="Demo GIF" width="600">
+  <!-- TODO: 录制 Demo GIF 后替换下方 src -->
+  <img src="https://via.placeholder.com/600x340/1a1a2e/ffffff?text=Demo+GIF+Coming+Soon" alt="Demo GIF" width="600">
 </p>
 
-> **如果 GIF 加载慢**，直接看这个 1 分钟视频：[Bilibili 演示](https://www.bilibili.com/video/BV1xx411c7mD) | [YouTube 演示](https://youtu.be/xxxxx)
+> **演示视频筹备中**，欢迎先 Star 关注：[Bilibili](https://www.bilibili.com) | [YouTube](https://www.youtube.com)
 
 **3 个核心场景**：
 1. **🤖 智能对话**：发微信给 Bot，自动调用 GPT-4 / DeepSeek / Claude 回复，支持多轮上下文
@@ -75,7 +80,7 @@
 ### 1. 克隆项目 & 安装依赖
 
 ```bash
-git clone https://github.com/your-username/wechat-ai-bot.git
+git clone https://github.com/xiehuaian77-sketch/wechat-ai-bot.git
 cd wechat-ai-bot
 uv sync
 ```
@@ -247,7 +252,7 @@ graph TB
 
 ### 💡 没有头绪？
 
-看看我们的 [Ideas 列表](https://github.com/your-username/wechat-ai-bot/discussions/categories/ideas) 或 [Good First Issues](https://github.com/your-username/wechat-ai-bot/labels/good%20first%20issue)。
+看看我们的 [Ideas 列表](https://github.com/xiehuaian77-sketch/wechat-ai-bot/discussions/categories/ideas) 或 [Good First Issues](https://github.com/xiehuaian77-sketch/wechat-ai-bot/labels/good%20first%20issue)。
 
 ---
 
@@ -255,10 +260,10 @@ graph TB
 
 ### 加入讨论
 
-- **GitHub Discussions**：[提问、分享用例、请求新功能](https://github.com/your-username/wechat-ai-bot/discussions)
-- **Twitter/X**：[@your_handle](https://twitter.com/your_handle) — 关注获取更新
-- **掘金**：[技术博客系列](https://juejin.cn/user/your-id) — 架构设计与实战教程
-- **V2EX**：[项目讨论帖](https://www.v2ex.com/t/xxxxxx)
+- **GitHub Discussions**：[提问、分享用例、请求新功能](https://github.com/xiehuaian77-sketch/wechat-ai-bot/discussions)
+- **Twitter/X**：[@xiehuaian77](https://twitter.com/xiehuaian77) — 关注获取更新
+- **掘金**：[技术博客系列](https://juejin.cn/user/713649897585054) — 架构设计与实战教程
+- **V2EX**：[项目讨论帖](https://www.v2ex.com/t/wechat-ai-bot) — 参与社区讨论
 
 ### 如果你喜欢这个项目
 
@@ -279,13 +284,13 @@ graph TB
 
 ## 📄 License
 
-MIT © [your-username](https://github.com/your-username)
+MIT © [xiehuaian77-sketch](https://github.com/xiehuaian77-sketch)
 
 ---
 
 ## 🙏 致谢
 
-- [ComWeChatRobot](https://github.com/your-username/ComWeChatRobot) — 微信 PC 客户端自动化框架
+- [ComWeChatRobot](https://github.com/WeChat-Shot/ComWeChatRobot) — 微信 PC 客户端自动化框架
 - [LangChain](https://python.langchain.com/) + [LangGraph](https://langchain-ai.github.io/langgraph/) — AI Agent 编排引擎
 - [ChromaDB](https://www.trychroma.com/) — 向量数据库
 - [FastAPI](https://fastapi.tiangolo.com/) — 现代 Python Web 框架
@@ -293,14 +298,15 @@ MIT © [your-username](https://github.com/your-username)
 ---
 
 <p align="center">
-  <a href="https://huggingface.co/spaces/your-username/wechat-ai-bot">
+  <!-- TODO: 部署 HuggingFace Space 后启用下方链接 -->
+  <!-- <a href="https://huggingface.co/spaces/xiehuaian77-sketch/wechat-ai-bot">
     <img src="https://img.shields.io/badge/🚀_一键体验-HuggingFace_Space-yellow?style=for-the-badge" alt="Demo">
-  </a>
-  <a href="https://github.com/your-username/wechat-ai-bot">
+  </a> -->
+  <a href="https://github.com/xiehuaian77-sketch/wechat-ai-bot">
     <img src="https://img.shields.io/badge/⭐_Star_Us_on_Github-ff6b6b?style=for-the-badge" alt="Star">
   </a>
 </p>
 
 <p align="center">
-  Made with ❤️ by <a href="https://github.com/your-username">your-username</a> and <a href="https://github.com/your-username/wechat-ai-bot/graphs/contributors">contributors</a>
+  Made with ❤️ by <a href="https://github.com/xiehuaian77-sketch">xiehuaian77-sketch</a> and <a href="https://github.com/xiehuaian77-sketch/wechat-ai-bot/graphs/contributors">contributors</a>
 </p>
