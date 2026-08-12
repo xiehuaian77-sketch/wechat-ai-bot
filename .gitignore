@@ -18,9 +18,16 @@ eggs/
 .vscode/
 *.swp
 *.swo
+*~
+*.orig
 
 # OS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
 # Project
@@ -39,6 +46,38 @@ docker-compose.override.yml
 .pytest_cache/
 .coverage
 htmlcov/
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+
+# Lint / Type-check
+.mypy_cache/
+.ruff_cache/
+
+# Package manager
+.uv/
+uv.lock
+package-lock.json
 
 # Temporary
 tmp/
+*.tmp
+*.temp
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+
+# Jupyter
+.ipynb_checkpoints
+*.ipynb
+
+# Node (if any frontend deps)
+node_modules/
+
+# Secrets (sentry, etc.)
+sentry*.properties
+.env.sentry-build-plugin

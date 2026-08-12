@@ -41,8 +41,8 @@
 ## 🎬 15 秒看懂它能做什么
 
 <p align="center">
-  <!-- TODO: 录制 Demo GIF 后替换下方 src -->
-  <img src="https://via.placeholder.com/600x340/1a1a2e/ffffff?text=Demo+GIF+Coming+Soon" alt="Demo GIF" width="600">
+  <!-- TODO: 录制 Demo GIF 后替换下方 src，参考 DEMO_GUIDE.md -->
+  <img src="assets/wechat-demo.gif" alt="Demo GIF" width="600">
 </p>
 
 > **演示视频筹备中**，欢迎先 Star 关注：[Bilibili](https://www.bilibili.com) | [YouTube](https://www.youtube.com)
@@ -294,6 +294,14 @@ MIT © [xiehuaian77-sketch](https://github.com/xiehuaian77-sketch)
 - [LangChain](https://python.langchain.com/) + [LangGraph](https://langchain-ai.github.io/langgraph/) — AI Agent 编排引擎
 - [ChromaDB](https://www.trychroma.com/) — 向量数据库
 - [FastAPI](https://fastapi.tiangolo.com/) — 现代 Python Web 框架
+
+---
+
+## 📋 开源准备
+
+- [GitHub 仓库配置指南](docs/GITHUB_SETUP.md) —  Topics、Social Preview、Release
+- [开源发布 Checklist](FOSS_OPENING_CHECKLIST.md) — 发布前逐项确认
+- [演示录制指南](DEMO_GUIDE.md) — 15 秒 GIF 制作教程
 
 ---
 
