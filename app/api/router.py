@@ -2,23 +2,23 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
 from loguru import logger
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.agent.engine import agent_engine
-from app.agent.human_in_the_loop import human_in_the_loop, RiskLevel
+from app.agent.human_in_the_loop import RiskLevel, human_in_the_loop
 from app.auth import (
     create_access_token,
     get_current_active_user,
-    require_agent,
     require_admin,
-    require_customer,
-    require_roles,
+    require_agent,
 )
-from app.database.models import AuditLog, Conversation, Message, Ticket, ToolCallLog, User
+from app.database.models import AuditLog, Conversation, Message, Order, Ticket, ToolCallLog, User
 from app.database.session import get_session
 from app.knowledge.vector_store import knowledge_store
 from app.models.schemas import (
@@ -34,8 +34,6 @@ from app.models.schemas import (
     ToolCallResponse,
 )
 from app.tools import tool_manager
-from sqlalchemy import select, insert, update, delete, func
-from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
 
@@ -122,7 +120,7 @@ async def get_chat_history(
     session_id: str,
     limit: int = 50,
     session: AsyncSession = Depends(get_session),
-    current_user: User = Depends(get_current_active_user),
+    _current_user: User = Depends(get_current_active_user),
 ) -> dict[str, Any]:
     """获取聊天历史。"""
     # 获取用户
@@ -171,7 +169,7 @@ async def get_chat_history(
 async def chat_message(
     request: MessageRequest,
     session: AsyncSession = Depends(get_session),
-    current_user: User = Depends(get_current_active_user),
+    _current_user: User = Depends(get_current_active_user),
 ) -> MessageResponse:
     """发送聊天消息。"""
     # 1. 根据 wechat_id 获取或创建用户
@@ -185,7 +183,7 @@ async def chat_message(
 
     try:
         # 上下文工程：注入用户记忆 + 知识库检索
-        from app.context import UserMemory, KnowledgeBase
+        from app.context import KnowledgeBase, UserMemory
 
         user_memory = await UserMemory.get_user_memory(str(user.id))
         knowledge_docs = await KnowledgeBase.search(request.content, top_k=2)
@@ -233,13 +231,13 @@ async def chat_message(
         raise HTTPException(
             status_code=500,
             detail="服务器内部错误，请稍后重试",
-        )
+        ) from e
 
 
 @router.post("/tools/call", tags=["tools"])
 async def call_tool(
     request: ToolCallRequest,
-    current_user: User = Depends(get_current_active_user),
+    _current_user: User = Depends(get_current_active_user),
 ) -> ToolCallResponse:
     """手动调用工具。"""
     result = await tool_manager.execute(request.tool_name, request.arguments)
@@ -253,7 +251,7 @@ async def call_tool(
 @router.post("/knowledge/upload", tags=["knowledge"])
 async def upload_document(
     request: DocumentUploadRequest,
-    current_user: User = Depends(require_agent),
+    _current_user: User = Depends(require_agent),
 ) -> dict[str, str]:
     """上传知识库文档。"""
     await knowledge_store.add_documents(
@@ -266,7 +264,7 @@ async def upload_document(
 @router.post("/knowledge/search", tags=["knowledge"])
 async def search_knowledge(
     request: KnowledgeSearchRequest,
-    current_user: User = Depends(get_current_active_user),
+    _current_user: User = Depends(get_current_active_user),
 ) -> KnowledgeSearchResponse:
     """检索知识库。"""
     raw = await knowledge_store.search(request.query, top_k=request.top_k)
@@ -279,7 +277,7 @@ async def search_knowledge(
 
 @router.get("/admin/whitelist", tags=["admin"])
 async def get_whitelist(
-    current_user: User = Depends(require_admin),
+    _current_user: User = Depends(require_admin),
 ) -> dict[str, list[str]]:
     """获取管理员白名单。"""
     from config.settings import settings
@@ -290,11 +288,12 @@ async def get_whitelist(
 @router.post("/admin/whitelist", tags=["admin"])
 async def update_whitelist(
     wxids: list[str],
-    current_user: User = Depends(require_admin),
+    _current_user: User = Depends(require_admin),
 ) -> dict[str, str]:
     """更新管理员白名单。"""
-    from config.settings import settings
     import pathlib
+
+    from config.settings import settings
 
     settings.ADMIN_WHITELIST = ",".join(wxids)
 
@@ -319,7 +318,7 @@ async def update_whitelist(
 
 @router.get("/admin/blacklist", tags=["admin"])
 async def get_blacklist(
-    current_user: User = Depends(require_admin),
+    _current_user: User = Depends(require_admin),
 ) -> dict[str, list[str]]:
     """获取群黑名单。"""
     from config.settings import settings
@@ -330,11 +329,12 @@ async def get_blacklist(
 @router.post("/admin/blacklist", tags=["admin"])
 async def update_blacklist(
     group_ids: list[str],
-    current_user: User = Depends(require_admin),
+    _current_user: User = Depends(require_admin),
 ) -> dict[str, str]:
     """更新群黑名单。"""
-    from config.settings import settings
     import pathlib
+
+    from config.settings import settings
 
     settings.GROUP_BLACKLIST = ",".join(group_ids)
 
@@ -365,14 +365,14 @@ async def update_blacklist(
 async def create_ticket(
     request: dict,
     session: AsyncSession = Depends(get_session),
-    current_user: User = Depends(require_agent),
+    _current_user: User = Depends(require_agent),
 ) -> dict[str, Any]:
     """创建售后工单。"""
     try:
         user_id = uuid.UUID(request.get("user_id"))
         conversation_id = uuid.UUID(request.get("conversation_id"))
     except (TypeError, ValueError):
-        raise HTTPException(status_code=400, detail="Invalid user_id or conversation_id")
+        raise HTTPException(status_code=400, detail="Invalid user_id or conversation_id") from None
 
     ticket = Ticket(
         conversation_id=conversation_id,
@@ -404,7 +404,7 @@ async def list_tickets(
     status: str | None = None,
     priority: str | None = None,
     session: AsyncSession = Depends(get_session),
-    current_user: User = Depends(require_agent),
+    _current_user: User = Depends(require_agent),
 ) -> dict[str, Any]:
     """查询工单列表。"""
     query = select(Ticket).order_by(Ticket.created_at.desc())
@@ -437,13 +437,13 @@ async def resolve_ticket(
     ticket_id: str,
     request: dict,
     session: AsyncSession = Depends(get_session),
-    current_user: User = Depends(require_agent),
+    _current_user: User = Depends(require_agent),
 ) -> dict[str, Any]:
     """解决工单。"""
     try:
         t_id = uuid.UUID(ticket_id)
     except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid ticket_id")
+        raise HTTPException(status_code=400, detail="Invalid ticket_id") from None
 
     result = await session.execute(select(Ticket).where(Ticket.id == t_id))
     ticket = result.scalar_one_or_none()
@@ -458,7 +458,7 @@ async def resolve_ticket(
     # 审计日志
     await _create_audit_log(
         session,
-        actor_id=current_user.id,
+        actor_id=_current_user.id,
         action="resolve",
         resource_type="ticket",
         resource_id=str(ticket.id),
@@ -477,7 +477,7 @@ async def resolve_ticket(
 async def request_manual_approval(
     request: ApprovalRequest,
     session: AsyncSession = Depends(get_session),
-    current_user: User = Depends(get_current_active_user),
+    _current_user: User = Depends(get_current_active_user),
 ) -> dict[str, Any]:
     """创建人工审批请求（Agent 调用）。"""
     try:
@@ -485,13 +485,13 @@ async def request_manual_approval(
     except ValueError:
         risk_level = RiskLevel.MEDIUM
 
-    user_id = uuid.UUID(request.user_id) if request.user_id else current_user.id
+    user_id = uuid.UUID(request.user_id) if request.user_id else _current_user.id
     conversation_id = uuid.UUID(request.conversation_id) if request.conversation_id else None
 
     if conversation_id is None:
         raise HTTPException(status_code=400, detail="conversation_id is required")
 
-    result = await human_in_the_loop.create_approval_request(
+    return await human_in_the_loop.create_approval_request(
         session=session,
         user_id=user_id,
         conversation_id=conversation_id,
@@ -499,7 +499,6 @@ async def request_manual_approval(
         details=request.details,
         risk_level=risk_level,
     )
-    return result
 
 
 # ============================================================================
@@ -510,7 +509,7 @@ async def request_manual_approval(
 async def get_order(
     order_id: str,
     session: AsyncSession = Depends(get_session),
-    current_user: User = Depends(require_agent),
+    _current_user: User = Depends(require_agent),
 ) -> dict[str, Any]:
     """查询订单信息。"""
     result = await session.execute(select(Order).where(Order.id == order_id))
@@ -566,7 +565,7 @@ async def list_audit_logs(
     action: str | None = None,
     limit: int = 50,
     session: AsyncSession = Depends(get_session),
-    current_user: User = Depends(require_admin),
+    _current_user: User = Depends(require_admin),
 ) -> dict[str, Any]:
     """查询审计日志。"""
     query = select(AuditLog).order_by(AuditLog.created_at.desc()).limit(limit)
@@ -580,13 +579,13 @@ async def list_audit_logs(
     return {
         "items": [
             {
-                "id": str(l.id),
-                "action": l.action,
-                "resource_type": l.resource_type,
-                "resource_id": l.resource_id,
-                "created_at": l.created_at.isoformat(),
+                "id": str(log.id),
+                "action": log.action,
+                "resource_type": log.resource_type,
+                "resource_id": log.resource_id,
+                "created_at": log.created_at.isoformat(),
             }
-            for l in logs
+            for log in logs
         ],
         "total": len(logs),
     }
@@ -596,7 +595,7 @@ async def list_audit_logs(
 async def get_observability_metrics(
     limit: int = 100,
     session: AsyncSession = Depends(get_session),
-    current_user: User = Depends(require_admin),
+    _current_user: User = Depends(require_admin),
 ) -> dict[str, Any]:
     """获取可观测性指标（仪表盘用）。"""
     # 消息统计

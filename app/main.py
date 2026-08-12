@@ -1,22 +1,22 @@
 """FastAPI 应用入口。"""
 from __future__ import annotations
 
+from datetime import UTC
 from pathlib import Path
 from typing import Any
 
-from config.settings import PROJECT_ROOT, settings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from loguru import logger
 
 from app.api.router import router as api_router
 from app.database.session import Base, engine
+from app.knowledge.vector_store import knowledge_store
 from app.middleware.rate_limit import RateLimitMiddleware
 from app.routers.wechat import router as wechat_router
 from app.tools import register_all_tools
-from app.knowledge.vector_store import knowledge_store
+from config.settings import PROJECT_ROOT, settings
 
 # =============================================================================
 # Sentry 初始化（可选）
@@ -88,10 +88,10 @@ def create_app() -> FastAPI:
     @application.get("/health", tags=["system"])
     async def health() -> dict[str, Any]:
         """健康检查。"""
-        from datetime import datetime, timezone
+        from datetime import datetime
         return {
             "status": "ok",
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "providers": [],
         }
 

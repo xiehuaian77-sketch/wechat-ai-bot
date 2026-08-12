@@ -7,8 +7,8 @@ from typing import Any
 from openai import AsyncOpenAI
 
 from app.services.ai.base import BaseAIProvider
-from config.settings import settings
 from app.utils.logger import logger
+from config.settings import settings
 
 
 class CustomProvider(BaseAIProvider):

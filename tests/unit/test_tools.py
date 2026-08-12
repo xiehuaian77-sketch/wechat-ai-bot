@@ -3,10 +3,10 @@ from __future__ import annotations
 
 import pytest
 
-from app.tools.datetime_tool import DateTimeTool
-from app.tools.weather import WeatherTool
-from app.tools.registry import tool_registry
 from app.tools.base import ToolResult
+from app.tools.datetime_tool import DateTimeTool
+from app.tools.registry import tool_registry
+from app.tools.weather import WeatherTool
 
 
 @pytest.mark.anyio
@@ -39,11 +39,11 @@ async def test_weather_tool_success(monkeypatch: pytest.MonkeyPatch):
         async def __aexit__(self, *args: object) -> None:
             pass
 
-        async def get(self, url: str, timeout: float = 10.0) -> FakeResponse:
+        async def get(self, _url: str, _timeout: float = 10.0) -> FakeResponse:
             return FakeResponse()
 
     import app.tools.weather as weather_module
-    monkeypatch.setattr(weather_module.httpx, "AsyncClient", lambda timeout: FakeClient())
+    monkeypatch.setattr(weather_module.httpx, "AsyncClient", lambda *_args, **_kwargs: FakeClient())
 
     tool = WeatherTool()
     result: ToolResult = await tool.execute(city="Beijing")
@@ -64,11 +64,11 @@ async def test_weather_tool_http_error(monkeypatch: pytest.MonkeyPatch):
         async def __aexit__(self, *args: object) -> None:
             pass
 
-        async def get(self, url: str, timeout: float) -> FakeResponse:
+        async def get(self, _url: str, _timeout: float) -> FakeResponse:
             return FakeResponse()
 
     import app.tools.weather as weather_module
-    monkeypatch.setattr(weather_module.httpx, "AsyncClient", lambda timeout: FakeClient())
+    monkeypatch.setattr(weather_module.httpx, "AsyncClient", lambda *_args, **_kwargs: FakeClient())
 
     tool = WeatherTool()
     result: ToolResult = await tool.execute(city="Unknown")

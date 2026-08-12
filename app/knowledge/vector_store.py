@@ -4,8 +4,9 @@ from __future__ import annotations
 from typing import Any
 
 import chromadb
-from config.settings import settings
+
 from app.utils.logger import logger
+from config.settings import settings
 
 
 class KnowledgeStore:
@@ -40,7 +41,7 @@ class KnowledgeStore:
         dists = results.get("distances", [[]])[0]
         return [
             {"text": doc, "score": float(dist)}
-            for doc, dist in zip(docs, dists)
+            for doc, dist in zip(docs, dists, strict=True)
         ]
 
     def get_stats(self) -> dict[str, Any]:

@@ -3,12 +3,11 @@ from __future__ import annotations
 
 from typing import Any
 
-from app.agent.state import AgentState, TaskStep
 from app.agent.human_in_the_loop import human_in_the_loop
+from app.agent.state import AgentState, TaskStep
 from app.services.ai.manager import ai_manager
 from app.tools.manager import tool_manager
 from app.utils.logger import logger
-
 
 # =============================================================================
 # Agent 节点定义
@@ -108,8 +107,7 @@ async def executor_node(state: AgentState) -> dict[str, Any]:
     if human_in_the_loop.requires_manual_approval(risk_level):
         logger.info(f"Human-in-the-loop: blocking {task.name} (risk={risk_level.value})")
         return {
-            "tool_results": state.tool_results
-            + [{"tool": task.name, "output": f"[人工审批] 该操作需要人工确认（风险级别：{risk_level.value}）"}],
+            "tool_results": [*state.tool_results, {"tool": task.name, "output": f"[人工审批] 该操作需要人工确认（风险级别：{risk_level.value}）"}],
             "blocked": True,
             "risk_level": risk_level.value,
         }
@@ -122,10 +120,10 @@ async def executor_node(state: AgentState) -> dict[str, Any]:
                 # 构造工具输入（简化：直接用最后一条消息）
                 last_msg = state.messages[-1].content if state.messages else ""
                 result = await tool.run(last_msg)
-                return {"tool_results": state.tool_results + [{"tool": task.name, "output": str(result)[:500]}]}
+                return {"tool_results": [*state.tool_results, {"tool": task.name, "output": str(result)[:500]}]}
             except Exception as e:
                 logger.error(f"Tool {task.name} error: {e}")
-                return {"tool_results": state.tool_results + [{"tool": task.name, "output": f"Error: {e}"}]}
+                return {"tool_results": [*state.tool_results, {"tool": task.name, "output": f"Error: {e}"}]}
         else:
             # 工具不存在，回退到 LLM 生成
             result = await ai_manager.chat(
@@ -135,7 +133,7 @@ async def executor_node(state: AgentState) -> dict[str, Any]:
                     *[{"role": {"human": "user", "ai": "assistant", "system": "system"}.get(m.type, m.type), "content": m.content} for m in state.messages],
                 ],
             )
-            return {"tool_results": state.tool_results + [{"tool": "llm", "output": result[:500]}]}
+            return {"tool_results": [*state.tool_results, {"tool": "llm", "output": result[:500]}]}
     else:
         logger.info(f"Thinking: {task.name}")
         return {"iteration": state.iteration + 1}
@@ -200,8 +198,8 @@ def should_continue(state: AgentState) -> str:
 
 
 __all__ = [
-    "planner_node",
     "executor_node",
+    "planner_node",
     "reflector_node",
     "responder_node",
     "should_continue",

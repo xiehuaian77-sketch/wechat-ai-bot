@@ -1,8 +1,6 @@
 """中间件单元测试。"""
 from __future__ import annotations
 
-import time
-
 import pytest
 from fastapi import FastAPI
 from starlette.testclient import TestClient

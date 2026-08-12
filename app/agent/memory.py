@@ -4,8 +4,8 @@ from __future__ import annotations
 from datetime import datetime, timedelta
 from typing import Any
 
-from app.database.session import get_session
 from app.database.models import Conversation, Message
+from app.database.session import get_session
 from app.utils.logger import logger
 
 
@@ -49,6 +49,7 @@ class AgentMemory:
         try:
             async for session in get_session():
                 from sqlalchemy import select
+
                 from app.database.models import Conversation
 
                 stmt = (

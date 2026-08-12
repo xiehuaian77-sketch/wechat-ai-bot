@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from config.settings import settings
-from app.utils.logger import logger
 
 
 def check_permission(wxid: str, room_id: str | None) -> tuple[bool, str]:

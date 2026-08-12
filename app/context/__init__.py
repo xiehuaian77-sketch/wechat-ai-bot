@@ -1,15 +1,16 @@
 """上下文工程：用户记忆 + 知识库检索 + 工具结果缓存。"""
 from __future__ import annotations
 
-import json
 import hashlib
+import json
+from contextlib import suppress
 from datetime import datetime, timedelta
 from typing import Any
 
-from loguru import logger
+from sqlalchemy import select
 
+from app.database.models import Conversation, KnowledgeDocument, User
 from app.database.session import get_session
-from app.database.models import User, Conversation, KnowledgeDocument
 
 
 class UserMemory:
@@ -43,10 +44,8 @@ class UserMemory:
 
             context = {"conversation_id": str(conv.id), "session_id": conv.session_id, "status": conv.status}
             if conv.context:
-                try:
+                with suppress(json.JSONDecodeError):
                     context.update(json.loads(conv.context))
-                except json.JSONDecodeError:
-                    pass
             return context
 
 

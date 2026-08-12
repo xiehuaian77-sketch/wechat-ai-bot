@@ -9,12 +9,12 @@ from app.utils.logger import logger
 class AgentRAG:
     """Agent RAG 知识库接口。"""
 
-    async def search(self, query: str, top_k: int = 5) -> list[dict[str, Any]]:
+    async def search(self, query: str, _top_k: int = 5) -> list[dict[str, Any]]:
         """检索相关知识。"""
         logger.info(f"RAG search: {query}")
         return []
 
-    async def add_document(self, title: str, content: str) -> None:
+    async def add_document(self, title: str, _content: str) -> None:
         """添加文档到知识库。"""
         logger.info(f"RAG add document: {title}")
 

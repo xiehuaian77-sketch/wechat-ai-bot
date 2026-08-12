@@ -1,7 +1,7 @@
 """日期时间查询工具。"""
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from app.tools.base import BaseTool, ToolResult
@@ -15,9 +15,9 @@ class DateTimeTool(BaseTool):
     description = "获取当前日期和时间"
 
     async def execute(self, **kwargs: Any) -> ToolResult:
-        timezone_name = kwargs.get("timezone", "UTC")
+        del kwargs
         try:
-            now = datetime.now(timezone.utc)
+            now = datetime.now(UTC)
             formatted = now.strftime("%Y-%m-%d %H:%M:%S %Z")
             return ToolResult(success=True, output=formatted)
         except Exception as e:

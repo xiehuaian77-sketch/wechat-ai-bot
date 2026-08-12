@@ -1,20 +1,20 @@
 """Agent 引擎运行时。"""
 from __future__ import annotations
 
+import json
 import time
 from typing import Any
 
 from langgraph.graph import END, StateGraph
 
 from app.agent.core import (
-    planner_node,
     executor_node,
+    planner_node,
     reflector_node,
     responder_node,
     should_continue,
 )
 from app.agent.state import AgentState
-from app.context import UserMemory, KnowledgeBase, tool_result_cache
 from app.utils.logger import logger
 
 
@@ -77,7 +77,7 @@ class AgentEngine:
         start_time = time.perf_counter()
 
         # 转换为 LangChain 消息格式
-        from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+        from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
         lc_messages = []
         for msg in messages:
@@ -102,7 +102,7 @@ class AgentEngine:
         if lc_messages and lc_messages[0].__class__.__name__ == "SystemMessage":
             lc_messages[0] = SystemMessage(content=augmented_system)
         else:
-            lc_messages = [SystemMessage(content=augmented_system)] + lc_messages
+            lc_messages = [SystemMessage(content=augmented_system), *lc_messages]
 
         initial_state: AgentState = {
             "messages": lc_messages,

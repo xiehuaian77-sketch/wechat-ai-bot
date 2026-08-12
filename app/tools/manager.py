@@ -25,8 +25,7 @@ class ToolManager:
         if tool is None:
             return ToolResult(success=False, output="", error=f"工具未找到: {tool_name}")
         try:
-            result = await tool.execute(**arguments)
-            return result
+            return await tool.execute(**arguments)
         except Exception as e:
             logger.error(f"Tool execution error: {tool_name} - {e}")
             return ToolResult(success=False, output="", error=str(e))

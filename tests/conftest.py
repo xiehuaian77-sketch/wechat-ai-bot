@@ -4,17 +4,15 @@ from __future__ import annotations
 import os
 
 import pytest
-from httpx import AsyncClient, ASGITransport
-from sqlalchemy.ext.asyncio import create_async_engine
-from sqlalchemy.orm import sessionmaker
+from httpx import ASGITransport, AsyncClient
 
 # 覆盖为内存 SQLite
 os.environ.setdefault("APP_ENV", "testing")
 os.environ.setdefault("DATABASE_URL", "sqlite+aiosqlite:///:memory:")
 os.environ.setdefault("REDIS_ENABLED", "false")
 
-from app.main import create_app
 from app.database.session import Base, engine, get_session
+from app.main import create_app
 
 
 @pytest.fixture(scope="session")
@@ -33,6 +31,7 @@ async def app():
 
 @pytest.fixture
 async def client(app):
+    _ = app  # suppress unused argument warning
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         yield ac
@@ -40,5 +39,6 @@ async def client(app):
 
 @pytest.fixture
 async def db_session(app):
+    _ = app  # suppress unused argument warning
     async for session in get_session():
         yield session

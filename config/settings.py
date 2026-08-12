@@ -1,7 +1,6 @@
 """全局配置（Pydantic Settings）。"""
 from __future__ import annotations
 
-import os
 from pathlib import Path
 from typing import Literal
 
@@ -12,7 +11,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 ENV_FILE = PROJECT_ROOT / ".env"
 
 
-def get_settings() -> "Settings":
+def get_settings() -> Settings:
     """单例配置加载。"""
     return Settings()
 

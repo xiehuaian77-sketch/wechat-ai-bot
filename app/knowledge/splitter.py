@@ -1,8 +1,6 @@
 """文本分割器。"""
 from __future__ import annotations
 
-from typing import Any
-
 
 class TextSplitter:
     """简单文本分割器。"""

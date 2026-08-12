@@ -2,13 +2,13 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 
 
 class DocumentLoader:
     """文档加载器，支持多种格式。"""
 
-    SUPPORTED_EXTENSIONS = {".pdf", ".txt", ".docx", ".csv", ".xlsx"}
+    SUPPORTED_EXTENSIONS: ClassVar[set[str]] = {".pdf", ".txt", ".docx", ".csv", ".xlsx"}
 
     def load(self, file_path: str) -> dict[str, Any]:
         """加载文档。"""

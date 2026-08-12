@@ -4,13 +4,14 @@ from __future__ import annotations
 from collections.abc import AsyncGenerator
 from pathlib import Path
 
-from config.settings import settings
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
     async_sessionmaker,
     create_async_engine,
 )
 from sqlalchemy.orm import DeclarativeBase
+
+from config.settings import settings
 
 
 def _ensure_data_dir() -> None:
@@ -51,4 +52,4 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
             raise
 
 
-__all__ = ["Base", "engine", "async_session", "get_session"]
+__all__ = ["Base", "async_session", "engine", "get_session"]

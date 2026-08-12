@@ -3,20 +3,19 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime
-from typing import Optional
 
 from sqlalchemy import (
+    UUID,
     Boolean,
     Column,
     DateTime,
-    Enum,
     Float,
     ForeignKey,
     Integer,
     String,
     Text,
 )
-from sqlalchemy import UUID
+
 from app.database.session import Base
 
 
@@ -158,13 +157,13 @@ class AuditLog(Base):
 
 
 __all__ = [
-    "Base",
-    "User",
-    "Conversation",
-    "Message",
-    "Ticket",
-    "Order",
-    "KnowledgeDocument",
-    "ToolCallLog",
     "AuditLog",
+    "Base",
+    "Conversation",
+    "KnowledgeDocument",
+    "Message",
+    "Order",
+    "Ticket",
+    "ToolCallLog",
+    "User",
 ]

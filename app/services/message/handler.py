@@ -5,6 +5,7 @@ import time
 from typing import Any
 
 import httpx
+
 from app.agent.engine import agent_engine
 from app.services.ai.manager import ai_manager
 from app.services.message.permissions import check_permission
@@ -110,7 +111,7 @@ def normalize_msg_type(raw_type: Any) -> str:
     return "text"
 
 
-async def handle_text_message(wxid: str, content: str, room_id: str | None, nickname: str) -> None:
+async def handle_text_message(wxid: str, content: str, room_id: str | None, _nickname: str) -> None:
     """处理文本消息。"""
     # 检测 Battle Mode 命令
     if content.startswith("@battle ") or content.startswith("battle "):
@@ -161,6 +162,7 @@ async def handle_battle_mode(wxid: str, content: str, room_id: str | None) -> No
 
         # 并行调用两个模型（默认使用 custom provider）
         import asyncio
+
         from app.services.ai.factory import ProviderFactory
 
         def resolve_target(model_name: str) -> tuple[str, str]:
@@ -189,22 +191,22 @@ async def handle_battle_mode(wxid: str, content: str, room_id: str | None) -> No
         await send_wechat_message(wxid, "⚠️ Battle Mode 失败，请稍后重试。", room_id)
 
 
-async def handle_image_message(wxid: str, content: str, room_id: str | None) -> None:
+async def handle_image_message(wxid: str, _content: str, room_id: str | None) -> None:
     """处理图片消息（TODO：接入多模态 Vision）。"""
     await send_wechat_message(wxid, "🖼️ 图片消息已收到，多模态识别功能开发中...", room_id)
 
 
-async def handle_file_message(wxid: str, content: str, room_id: str | None) -> None:
+async def handle_file_message(wxid: str, _content: str, room_id: str | None) -> None:
     """处理文件消息。"""
     await send_wechat_message(wxid, "📎 文件消息已收到，RAG 知识库功能开发中...", room_id)
 
 
-async def handle_upload_command(wxid: str, content: str, room_id: str | None) -> None:
+async def handle_upload_command(wxid: str, _content: str, room_id: str | None) -> None:
     """处理知识库上传命令。"""
     await send_wechat_message(wxid, "📚 知识库上传功能开发中，请通过管理面板上传文档。", room_id)
 
 
-async def handle_admin_command(wxid: str, content: str, room_id: str | None) -> None:
+async def handle_admin_command(wxid: str, _content: str, room_id: str | None) -> None:
     """处理管理命令。"""
     await send_wechat_message(wxid, "🔧 管理面板：http://localhost:8000/admin", room_id)
 

@@ -3,13 +3,15 @@ from __future__ import annotations
 
 import time
 from collections import defaultdict, deque
-from typing import Callable
+from collections.abc import Callable
+from typing import Any
 
 from fastapi import Request, Response
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
-from config.settings import settings
+
 from app.utils.logger import logger
+from config.settings import settings
 
 
 class RateLimitMiddleware(BaseHTTPMiddleware):

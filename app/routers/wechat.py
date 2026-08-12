@@ -4,7 +4,6 @@ from __future__ import annotations
 from typing import Any
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException, Request
-from loguru import logger
 
 from app.services.message.handler import handle_wechat_message
 
@@ -17,7 +16,7 @@ async def wechat_hook(request: Request, background_tasks: BackgroundTasks) -> di
     try:
         payload = await request.json()
     except Exception:
-        raise HTTPException(status_code=400, detail="Invalid JSON")
+        raise HTTPException(status_code=400, detail="Invalid JSON") from None
 
     # 异步处理，快速响应
     background_tasks.add_task(handle_wechat_message, payload)

@@ -1,15 +1,17 @@
 """AI 提供商工厂。"""
 from __future__ import annotations
 
-from app.services.ai.openai_provider import OpenAIProvider
+from typing import ClassVar
+
 from app.services.ai.anthropic_provider import AnthropicProvider
 from app.services.ai.custom_provider import CustomProvider
+from app.services.ai.openai_provider import OpenAIProvider
 
 
 class ProviderFactory:
     """AI 提供商工厂，支持动态创建不同模型的实例。"""
 
-    _providers = {
+    _providers: ClassVar[dict[str, type]] = {
         # OpenAI 兼容接口（OpenAI / DeepSeek / OpenRouter / Qwen / GLM / Moonshot / Yi / Baichuan / MiniMax）
         "openai": OpenAIProvider,
         "deepseek": OpenAIProvider,
@@ -28,7 +30,7 @@ class ProviderFactory:
     }
 
     # 模型 -> (provider_key, model_name) 映射
-    _model_map = {
+    _model_map: ClassVar[dict[str, tuple[str, str]]] = {
         # OpenAI
         "gpt-4o": ("openai", "gpt-4o"),
         "gpt-4o-mini": ("openai", "gpt-4o-mini"),

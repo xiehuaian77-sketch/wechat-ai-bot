@@ -1,6 +1,8 @@
 """AI 提供商管理器。"""
 from __future__ import annotations
 
+from typing import Any
+
 from app.services.ai.factory import ProviderFactory
 from app.utils.logger import logger
 

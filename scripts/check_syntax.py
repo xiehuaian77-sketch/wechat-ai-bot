@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import ast
 import os
+from pathlib import Path
 
 
 def check_syntax() -> bool:
@@ -15,9 +16,9 @@ def check_syntax() -> bool:
         for fn in filenames:
             if fn.endswith(".py"):
                 count += 1
-                path = os.path.join(dirpath, fn)
+                path = Path(dirpath) / fn
                 try:
-                    with open(path, "r", encoding="utf-8") as f:
+                    with path.open(encoding="utf-8") as f:
                         ast.parse(f.read())
                 except SyntaxError as e:
                     issues.append(f"{path}: {e}")

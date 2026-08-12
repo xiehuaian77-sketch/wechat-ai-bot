@@ -5,9 +5,9 @@ import os
 from typing import Any
 
 from anthropic import AsyncAnthropic
+
 from app.services.ai.base import BaseAIProvider
 from config.settings import settings
-from app.utils.logger import logger
 
 
 class AnthropicProvider(BaseAIProvider):

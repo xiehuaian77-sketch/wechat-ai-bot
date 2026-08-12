@@ -7,7 +7,7 @@ from app.knowledge.vector_store import KnowledgeStore
 
 
 @pytest.fixture
-def temp_knowledge(tmp_path: pytest.TempPathFactory) -> KnowledgeStore:
+def temp_knowledge() -> KnowledgeStore:
     store = KnowledgeStore()
     store.setup(collection_name="test_collection")
     yield store

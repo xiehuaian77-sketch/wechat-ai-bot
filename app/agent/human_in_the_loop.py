@@ -2,24 +2,19 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
-from loguru import logger
-
-from app.database.session import get_session
-from app.database.models import AuditLog, Ticket
-from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.database.models import AuditLog, Ticket, ToolCallLog
 
 # =============================================================================
 # 风险级别定义
 # =============================================================================
 
 
-class RiskLevel(str, Enum):
+class RiskLevel(StrEnum):
     """操作风险级别。"""
 
     LOW = "low"  # 一般咨询，可直接处理

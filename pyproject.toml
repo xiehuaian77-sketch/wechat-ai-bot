@@ -22,10 +22,6 @@ classifiers = [
     "Topic :: Communications :: Chat",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
-[project.urls]
-Homepage = "https://github.com/xiehuaian77-sketch/wechat-ai-bot"
-Repository = "https://github.com/xiehuaian77-sketch/wechat-ai-bot"
-"Bug Tracker" = "https://github.com/xiehuaian77-sketch/wechat-ai-bot/issues"
 dependencies = [
     # ---- Web Framework ----
     "fastapi>=0.115.0",
@@ -66,6 +62,11 @@ dependencies = [
     "sentry-sdk>=2.67.1",
 ]
 
+[project.urls]
+Homepage = "https://github.com/xiehuaian77-sketch/wechat-ai-bot"
+Repository = "https://github.com/xiehuaian77-sketch/wechat-ai-bot"
+"Bug Tracker" = "https://github.com/xiehuaian77-sketch/wechat-ai-bot/issues"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=8.3.0",
@@ -102,7 +103,12 @@ select = [
     "PTH",    # flake8-pytest-hooks
     "RUF",    # Ruff-specific rules
 ]
-ignore = ["E501"]
+ignore = [
+    "E501",    # line length (handled by formatter)
+    "RUF001",  # fullwidth string chars (Chinese text is acceptable)
+    "RUF002",  # fullwidth docstring chars
+    "RUF003",  # fullwidth comment chars
+]
 
 [tool.ruff.lint.isort]
 known-first-party = ["app", "config", "tests"]
