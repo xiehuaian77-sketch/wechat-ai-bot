@@ -78,6 +78,7 @@ SENSITIVE_WORDS_FILE=config/sensitive_words.txt
 import random
 import asyncio
 
+
 async def send_with_delay(message: str):
     delay = random.uniform(2, 5)  # 2-5 秒随机延迟
     await asyncio.sleep(delay)
