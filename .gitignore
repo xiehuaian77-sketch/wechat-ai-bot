@@ -66,6 +66,9 @@ tmp/
 *.tmp
 *.temp
 
+# Static assets (exclude admin panel from other project)
+static/admin/
+
 # Archives
 *.zip
 *.tar.gz
