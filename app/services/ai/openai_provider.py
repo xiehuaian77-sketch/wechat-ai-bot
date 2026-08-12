@@ -1,4 +1,5 @@
 """OpenAI 兼容提供商（OpenAI / DeepSeek / OpenRouter / Qwen / GLM 等）。"""
+
 from __future__ import annotations
 
 import os
@@ -16,8 +17,12 @@ class OpenAIProvider(BaseAIProvider):
 
     name = "openai"
 
-    def __init__(self, api_key: str | None = None, base_url: str | None = None, model: str | None = None) -> None:
-        self._api_key = api_key or settings.OPENAI_API_KEY.get_secret_value() or os.getenv("OPENAI_API_KEY", "")
+    def __init__(
+        self, api_key: str | None = None, base_url: str | None = None, model: str | None = None
+    ) -> None:
+        self._api_key = (
+            api_key or settings.OPENAI_API_KEY.get_secret_value() or os.getenv("OPENAI_API_KEY", "")
+        )
         self._base_url = base_url or settings.OPENAI_BASE_URL
         self._model = model or settings.OPENAI_MODEL
         self._client = None

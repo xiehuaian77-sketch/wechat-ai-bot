@@ -1,4 +1,5 @@
 """人机协同机制：高风险场景人工确认。"""
+
 from __future__ import annotations
 
 import uuid
@@ -51,7 +52,9 @@ class HumanInTheLoop:
     def __init__(self) -> None:
         self._pending_confirmations: dict[str, dict[str, Any]] = {}
 
-    def assess_risk(self, user_message: str, tool_name: str | None = None, context: str | None = None) -> RiskLevel:
+    def assess_risk(
+        self, user_message: str, tool_name: str | None = None, context: str | None = None
+    ) -> RiskLevel:
         """评估操作风险级别。"""
         combined = f"{user_message} {context or ''} {tool_name or ''}"
         for keyword, level in HIGH_RISK_KEYWORDS.items():

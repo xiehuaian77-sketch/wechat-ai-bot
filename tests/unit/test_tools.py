@@ -1,4 +1,5 @@
 """工具层单元测试。"""
+
 from __future__ import annotations
 
 import pytest
@@ -43,6 +44,7 @@ async def test_weather_tool_success(monkeypatch: pytest.MonkeyPatch):
             return FakeResponse()
 
     import app.tools.weather as weather_module
+
     monkeypatch.setattr(weather_module.httpx, "AsyncClient", lambda *_args, **_kwargs: FakeClient())
 
     tool = WeatherTool()
@@ -68,6 +70,7 @@ async def test_weather_tool_http_error(monkeypatch: pytest.MonkeyPatch):
             return FakeResponse()
 
     import app.tools.weather as weather_module
+
     monkeypatch.setattr(weather_module.httpx, "AsyncClient", lambda *_args, **_kwargs: FakeClient())
 
     tool = WeatherTool()

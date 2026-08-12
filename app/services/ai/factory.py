@@ -1,4 +1,5 @@
 """AI 提供商工厂。"""
+
 from __future__ import annotations
 
 from typing import ClassVar

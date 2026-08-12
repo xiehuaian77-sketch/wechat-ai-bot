@@ -1,4 +1,5 @@
 """Anthropic (Claude) 提供商。"""
+
 from __future__ import annotations
 
 import os
@@ -22,7 +23,8 @@ class AnthropicProvider(BaseAIProvider):
     def client(self) -> AsyncAnthropic:
         if self._client is None:
             self._client = AsyncAnthropic(
-                api_key=settings.ANTHROPIC_API_KEY.get_secret_value() or os.getenv("ANTHROPIC_API_KEY", ""),
+                api_key=settings.ANTHROPIC_API_KEY.get_secret_value()
+                or os.getenv("ANTHROPIC_API_KEY", ""),
             )
         return self._client
 

@@ -1,4 +1,5 @@
 """日期时间查询工具。"""
+
 from __future__ import annotations
 
 from datetime import UTC, datetime

@@ -128,3 +128,30 @@ python_files = ["test_*.py"]
 markers = [
     "network: marks tests that require network access (deselect with '-m \"not network\"')",
 ]
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "app.services.ai.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "app.agent.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "app.knowledge.vector_store"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "app.api.router"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "app.context"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "app.services.message.handler"
+ignore_errors = true

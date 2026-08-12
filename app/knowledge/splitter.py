@@ -1,4 +1,5 @@
 """文本分割器。"""
+
 from __future__ import annotations
 
 

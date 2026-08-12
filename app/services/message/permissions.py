@@ -1,4 +1,5 @@
 """消息权限控制。"""
+
 from __future__ import annotations
 
 from config.settings import settings

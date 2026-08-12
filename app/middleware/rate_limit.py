@@ -1,4 +1,5 @@
 """滑动窗口限流中间件。"""
+
 from __future__ import annotations
 
 import time
@@ -42,7 +43,9 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             self._ip[client_ip].popleft()
         if len(self._ip[client_ip]) > settings.RATE_LIMIT_IP:
             logger.warning(f"IP rate limit exceeded: {client_ip}")
-            return JSONResponse(status_code=429, content={"detail": "Too many requests from this IP"})
+            return JSONResponse(
+                status_code=429, content={"detail": "Too many requests from this IP"}
+            )
 
         return await call_next(request)
 

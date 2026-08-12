@@ -1,4 +1,5 @@
 """ChromaDB 向量存储。"""
+
 from __future__ import annotations
 
 from typing import Any
@@ -25,7 +26,9 @@ class KnowledgeStore:
         self._collection = self._client.get_or_create_collection(name=name)
         logger.info(f"ChromaDB initialized: {name}")
 
-    async def add_documents(self, documents: list[str], metadatas: list[dict] | None = None) -> None:
+    async def add_documents(
+        self, documents: list[str], metadatas: list[dict] | None = None
+    ) -> None:
         """添加文档到向量库。"""
         if self._collection is None:
             self.setup()
@@ -39,10 +42,7 @@ class KnowledgeStore:
         results = self._collection.query(query_texts=[query], n_results=top_k)
         docs = results.get("documents", [[]])[0]
         dists = results.get("distances", [[]])[0]
-        return [
-            {"text": doc, "score": float(dist)}
-            for doc, dist in zip(docs, dists, strict=True)
-        ]
+        return [{"text": doc, "score": float(dist)} for doc, dist in zip(docs, dists, strict=True)]
 
     def get_stats(self) -> dict[str, Any]:
         """获取知识库统计信息。"""

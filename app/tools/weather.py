@@ -1,4 +1,5 @@
 """天气查询工具。"""
+
 from __future__ import annotations
 
 from typing import Any

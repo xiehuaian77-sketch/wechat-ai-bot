@@ -1,4 +1,5 @@
 """全局配置（Pydantic Settings）。"""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -78,8 +79,12 @@ class Settings(BaseSettings):
     # =========================================================================
     # 自定义 OpenAI 兼容接口（如代理 / 中转）
     # =========================================================================
-    CUSTOM_API_KEY: SecretStr = Field(default=SecretStr(""), description="Custom OpenAI-compatible API Key")
-    CUSTOM_BASE_URL: str = Field(default="https://api.openai.com/v1", description="Custom OpenAI-compatible Base URL")
+    CUSTOM_API_KEY: SecretStr = Field(
+        default=SecretStr(""), description="Custom OpenAI-compatible API Key"
+    )
+    CUSTOM_BASE_URL: str = Field(
+        default="https://api.openai.com/v1", description="Custom OpenAI-compatible Base URL"
+    )
     CUSTOM_MODEL: str = Field(default="gpt-4o-mini", description="Custom OpenAI-compatible Model")
 
     # =========================================================================

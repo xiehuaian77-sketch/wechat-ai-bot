@@ -1,4 +1,5 @@
 """微信消息处理。"""
+
 from __future__ import annotations
 
 import time
@@ -86,7 +87,9 @@ def parse_payload(payload: dict[str, Any]) -> dict[str, Any]:
     return {
         "wxid": payload.get("wxid") or payload.get("from_wxid") or payload.get("sender", ""),
         "content": payload.get("content") or payload.get("msg") or payload.get("text", ""),
-        "msg_type": normalize_msg_type(payload.get("type") or payload.get("msg_type") or payload.get("message_type", "text")),
+        "msg_type": normalize_msg_type(
+            payload.get("type") or payload.get("msg_type") or payload.get("message_type", "text")
+        ),
         "room_id": payload.get("room_id") or payload.get("from_room_id"),
         "nickname": payload.get("nickname") or payload.get("from_nickname") or "",
         "is_at": payload.get("is_at", False),
@@ -175,8 +178,12 @@ async def handle_battle_mode(wxid: str, content: str, room_id: str | None) -> No
         provider_b, model_b_resolved = resolve_target(model_b)
 
         results = await asyncio.gather(
-            ai_manager.chat(provider_a, [{"role": "user", "content": question}], model=model_a_resolved),
-            ai_manager.chat(provider_b, [{"role": "user", "content": question}], model=model_b_resolved),
+            ai_manager.chat(
+                provider_a, [{"role": "user", "content": question}], model=model_a_resolved
+            ),
+            ai_manager.chat(
+                provider_b, [{"role": "user", "content": question}], model=model_b_resolved
+            ),
             return_exceptions=True,
         )
 

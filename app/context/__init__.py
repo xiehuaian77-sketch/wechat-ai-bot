@@ -1,4 +1,5 @@
 """上下文工程：用户记忆 + 知识库检索 + 工具结果缓存。"""
+
 from __future__ import annotations
 
 import hashlib
@@ -37,12 +38,18 @@ class UserMemory:
     async def get_conversation_context(conversation_id: str) -> dict[str, Any]:
         """获取对话上下文（用户画像、当前场景、意图等）。"""
         async with get_session() as session:
-            result = await session.execute(select(Conversation).where(Conversation.id == conversation_id))
+            result = await session.execute(
+                select(Conversation).where(Conversation.id == conversation_id)
+            )
             conv = result.scalar_one_or_none()
             if not conv:
                 return {}
 
-            context = {"conversation_id": str(conv.id), "session_id": conv.session_id, "status": conv.status}
+            context = {
+                "conversation_id": str(conv.id),
+                "session_id": conv.session_id,
+                "status": conv.status,
+            }
             if conv.context:
                 with suppress(json.JSONDecodeError):
                     context.update(json.loads(conv.context))
@@ -68,7 +75,9 @@ class KnowledgeBase:
     async def get_by_id(doc_id: str) -> dict[str, Any] | None:
         """获取知识库文档详情。"""
         async with get_session() as session:
-            result = await session.execute(select(KnowledgeDocument).where(KnowledgeDocument.id == doc_id))
+            result = await session.execute(
+                select(KnowledgeDocument).where(KnowledgeDocument.id == doc_id)
+            )
             doc = result.scalar_one_or_none()
             if not doc:
                 return None

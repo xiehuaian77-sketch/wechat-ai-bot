@@ -1,4 +1,5 @@
 """Agent 记忆管理。"""
+
 from __future__ import annotations
 
 from datetime import datetime, timedelta
@@ -43,7 +44,9 @@ class AgentMemory:
         except Exception as e:
             logger.error(f"Save message error: {e}")
 
-    async def get_history(self, user_id: str, session_id: str, limit: int = 20) -> list[dict[str, Any]]:
+    async def get_history(
+        self, user_id: str, session_id: str, limit: int = 20
+    ) -> list[dict[str, Any]]:
         """获取对话历史。"""
         result = []
         try:
@@ -61,17 +64,21 @@ class AgentMemory:
                 conv = (await session.execute(stmt)).scalar_one_or_none()
                 if conv:
                     from app.database.models import Message
+
                     msgs = (
-                        await session.execute(
-                            select(Message)
-                            .where(Message.conversation_id == conv.id)
-                            .order_by(Message.created_at.asc())
-                            .limit(limit)
+                        (
+                            await session.execute(
+                                select(Message)
+                                .where(Message.conversation_id == conv.id)
+                                .order_by(Message.created_at.asc())
+                                .limit(limit)
+                            )
                         )
-                    ).scalars().all()
+                        .scalars()
+                        .all()
+                    )
                     result = [
-                        {"role": m.role, "content": m.content, "model": m.model}
-                        for m in msgs
+                        {"role": m.role, "content": m.content, "model": m.model} for m in msgs
                     ]
                 break
         except Exception as e:

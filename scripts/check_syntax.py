@@ -1,4 +1,5 @@
 """代码质量自检脚本。"""
+
 from __future__ import annotations
 
 import ast

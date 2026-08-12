@@ -1,4 +1,5 @@
 """Agent 轻量级 RAG 知识库。"""
+
 from __future__ import annotations
 
 from typing import Any

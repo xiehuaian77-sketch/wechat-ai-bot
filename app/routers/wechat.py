@@ -1,4 +1,5 @@
 """微信 Hook 路由。"""
+
 from __future__ import annotations
 
 from typing import Any

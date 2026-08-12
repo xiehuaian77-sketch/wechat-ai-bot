@@ -1,4 +1,5 @@
 """FastAPI 应用入口。"""
+
 from __future__ import annotations
 
 from datetime import UTC
@@ -89,6 +90,7 @@ def create_app() -> FastAPI:
     async def health() -> dict[str, Any]:
         """健康检查。"""
         from datetime import datetime
+
         return {
             "status": "ok",
             "timestamp": datetime.now(UTC).isoformat(),

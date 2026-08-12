@@ -1,4 +1,5 @@
 """管理 API 路由。"""
+
 from __future__ import annotations
 
 import uuid
@@ -42,7 +43,10 @@ router = APIRouter()
 # 数据库辅助函数
 # ============================================================================
 
-async def _get_or_create_user(session: AsyncSession, wechat_id: str, nickname: str | None = None) -> User:
+
+async def _get_or_create_user(
+    session: AsyncSession, wechat_id: str, nickname: str | None = None
+) -> User:
     """根据微信 ID 获取或创建用户。"""
     result = await session.execute(select(User).where(User.wechat_id == wechat_id))
     user = result.scalar_one_or_none()
@@ -53,7 +57,9 @@ async def _get_or_create_user(session: AsyncSession, wechat_id: str, nickname: s
     return user
 
 
-async def _get_or_create_conversation(session: AsyncSession, user_id: uuid.UUID, session_id: str) -> Conversation:
+async def _get_or_create_conversation(
+    session: AsyncSession, user_id: uuid.UUID, session_id: str
+) -> Conversation:
     """获取或创建对话会话。"""
     result = await session.execute(
         select(Conversation).where(
@@ -103,7 +109,9 @@ async def _save_message(
 
 
 @router.post("/auth/login", tags=["auth"], response_model=LoginResponse)
-async def login(request: LoginRequest, session: AsyncSession = Depends(get_session)) -> LoginResponse:
+async def login(
+    request: LoginRequest, session: AsyncSession = Depends(get_session)
+) -> LoginResponse:
     """微信用户登录（获取 JWT Token）。"""
     user = await _get_or_create_user(session, request.wechat_id, request.nickname)
     token = create_access_token(user.id, user.wechat_id, user.role)
@@ -113,6 +121,7 @@ async def login(request: LoginRequest, session: AsyncSession = Depends(get_sessi
 # ============================================================================
 # 聊天 API
 # ============================================================================
+
 
 @router.get("/chat/history", tags=["chat"])
 async def get_chat_history(
@@ -187,7 +196,9 @@ async def chat_message(
 
         user_memory = await UserMemory.get_user_memory(str(user.id))
         knowledge_docs = await KnowledgeBase.search(request.content, top_k=2)
-        knowledge_context = "\n\n".join([d["content"] for d in knowledge_docs]) if knowledge_docs else None
+        knowledge_context = (
+            "\n\n".join([d["content"] for d in knowledge_docs]) if knowledge_docs else None
+        )
 
         # 4. 调用 Agent（带上下文）
         messages = [{"role": "user", "content": request.content}]
@@ -268,10 +279,7 @@ async def search_knowledge(
 ) -> KnowledgeSearchResponse:
     """检索知识库。"""
     raw = await knowledge_store.search(request.query, top_k=request.top_k)
-    results = [
-        {"content": item["text"], "score": item["score"]}
-        for item in raw
-    ]
+    results = [{"content": item["text"], "score": item["score"]} for item in raw]
     return KnowledgeSearchResponse(results=results, total=len(results))
 
 
@@ -281,6 +289,7 @@ async def get_whitelist(
 ) -> dict[str, list[str]]:
     """获取管理员白名单。"""
     from config.settings import settings
+
     items = [w.strip() for w in settings.ADMIN_WHITELIST.split(",") if w.strip()]
     return {"whitelist": items}
 
@@ -322,6 +331,7 @@ async def get_blacklist(
 ) -> dict[str, list[str]]:
     """获取群黑名单。"""
     from config.settings import settings
+
     items = [g.strip() for g in settings.GROUP_BLACKLIST.split(",") if g.strip()]
     return {"blacklist": items}
 
@@ -361,6 +371,7 @@ async def update_blacklist(
 # 工单 API
 # ============================================================================
 
+
 @router.post("/tickets", tags=["tickets"])
 async def create_ticket(
     request: dict,
@@ -396,7 +407,11 @@ async def create_ticket(
         changes={"type": ticket.type, "priority": ticket.priority},
     )
 
-    return {"id": str(ticket.id), "status": ticket.status, "created_at": ticket.created_at.isoformat()}
+    return {
+        "id": str(ticket.id),
+        "status": ticket.status,
+        "created_at": ticket.created_at.isoformat(),
+    }
 
 
 @router.get("/tickets", tags=["tickets"])
@@ -465,7 +480,11 @@ async def resolve_ticket(
         changes={"status": "resolved", "resolution": request.get("resolution")},
     )
 
-    return {"id": str(ticket.id), "status": ticket.status, "resolved_at": ticket.resolved_at.isoformat()}
+    return {
+        "id": str(ticket.id),
+        "status": ticket.status,
+        "resolved_at": ticket.resolved_at.isoformat(),
+    }
 
 
 # ============================================================================
@@ -505,6 +524,7 @@ async def request_manual_approval(
 # 订单 API
 # ============================================================================
 
+
 @router.get("/orders/{order_id}", tags=["orders"])
 async def get_order(
     order_id: str,
@@ -531,6 +551,7 @@ async def get_order(
 # ============================================================================
 # 审计日志 API
 # ============================================================================
+
 
 async def _create_audit_log(
     session: AsyncSession,
@@ -622,19 +643,24 @@ async def get_observability_metrics(
             # 获取该消息关联的工具调用日志
             tool_logs_for_msg = [log for log in tool_logs if log.message_id == m.id]
             msg_tool_success_rate = (
-                round(sum(1 for log in tool_logs_for_msg if log.success) / len(tool_logs_for_msg), 2)
-                if tool_logs_for_msg else None
+                round(
+                    sum(1 for log in tool_logs_for_msg if log.success) / len(tool_logs_for_msg), 2
+                )
+                if tool_logs_for_msg
+                else None
             )
-            recent.append({
-                "conversation_id": str(m.conversation_id),
-                "user_id": str(m.id),
-                "model": m.model,
-                "tool_calls": len(m.tool_calls.split(";")) if m.tool_calls else 0,
-                "latency_ms": m.latency_ms,
-                "tokens_used": m.tokens_used,
-                "tool_success_rate": msg_tool_success_rate,
-                "status": "blocked" if "人工" in (m.tool_calls or "") else "done",
-            })
+            recent.append(
+                {
+                    "conversation_id": str(m.conversation_id),
+                    "user_id": str(m.id),
+                    "model": m.model,
+                    "tool_calls": len(m.tool_calls.split(";")) if m.tool_calls else 0,
+                    "latency_ms": m.latency_ms,
+                    "tokens_used": m.tokens_used,
+                    "tool_success_rate": msg_tool_success_rate,
+                    "status": "blocked" if "人工" in (m.tool_calls or "") else "done",
+                }
+            )
 
     return {
         "total_conversations": total_conversations,

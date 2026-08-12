@@ -1,4 +1,5 @@
 """工具基类。"""
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
@@ -9,6 +10,7 @@ from typing import Any
 @dataclass
 class ToolResult:
     """工具执行结果。"""
+
     success: bool
     output: str
     error: str | None = None

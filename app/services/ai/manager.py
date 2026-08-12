@@ -1,4 +1,5 @@
 """AI 提供商管理器。"""
+
 from __future__ import annotations
 
 from typing import Any
@@ -35,16 +36,32 @@ class AIManager:
                 self._providers[key] = instance
         return self._providers[key]
 
-    async def chat(self, provider_name: str, messages: list[dict[str, str]], model: str | None = None, **kwargs: dict):
+    async def chat(
+        self,
+        provider_name: str,
+        messages: list[dict[str, str]],
+        model: str | None = None,
+        **kwargs: dict,
+    ):
         """发送聊天请求。"""
         provider = self.get_provider(provider_name, model)
-        logger.info(f"Using provider: {provider.name} / model: {getattr(provider, '_model', 'unknown')}")
+        logger.info(
+            f"Using provider: {provider.name} / model: {getattr(provider, '_model', 'unknown')}"
+        )
         return await provider.chat(messages, **kwargs)
 
-    async def stream_chat(self, provider_name: str, messages: list[dict[str, str]], model: str | None = None, **kwargs: dict):
+    async def stream_chat(
+        self,
+        provider_name: str,
+        messages: list[dict[str, str]],
+        model: str | None = None,
+        **kwargs: dict,
+    ):
         """流式聊天。"""
         provider = self.get_provider(provider_name, model)
-        logger.info(f"Streaming with provider: {provider.name} / model: {getattr(provider, '_model', 'unknown')}")
+        logger.info(
+            f"Streaming with provider: {provider.name} / model: {getattr(provider, '_model', 'unknown')}"
+        )
         async for chunk in provider.stream_chat(messages, **kwargs):
             yield chunk
 

@@ -1,4 +1,5 @@
 """LangGraph Agent 引擎。"""
+
 from __future__ import annotations
 
 from typing import Any
@@ -55,7 +56,7 @@ async def planner_node(state: AgentState) -> dict[str, Any]:
         import re
 
         # 提取 JSON
-        json_match = re.search(r'\{.*\}', response, re.DOTALL)
+        json_match = re.search(r"\{.*\}", response, re.DOTALL)
         if json_match:
             plan_data = json.loads(json_match.group())
             steps = []
@@ -107,7 +108,13 @@ async def executor_node(state: AgentState) -> dict[str, Any]:
     if human_in_the_loop.requires_manual_approval(risk_level):
         logger.info(f"Human-in-the-loop: blocking {task.name} (risk={risk_level.value})")
         return {
-            "tool_results": [*state.tool_results, {"tool": task.name, "output": f"[人工审批] 该操作需要人工确认（风险级别：{risk_level.value}）"}],
+            "tool_results": [
+                *state.tool_results,
+                {
+                    "tool": task.name,
+                    "output": f"[人工审批] 该操作需要人工确认（风险级别：{risk_level.value}）",
+                },
+            ],
             "blocked": True,
             "risk_level": risk_level.value,
         }
@@ -120,17 +127,38 @@ async def executor_node(state: AgentState) -> dict[str, Any]:
                 # 构造工具输入（简化：直接用最后一条消息）
                 last_msg = state.messages[-1].content if state.messages else ""
                 result = await tool.run(last_msg)
-                return {"tool_results": [*state.tool_results, {"tool": task.name, "output": str(result)[:500]}]}
+                return {
+                    "tool_results": [
+                        *state.tool_results,
+                        {"tool": task.name, "output": str(result)[:500]},
+                    ]
+                }
             except Exception as e:
                 logger.error(f"Tool {task.name} error: {e}")
-                return {"tool_results": [*state.tool_results, {"tool": task.name, "output": f"Error: {e}"}]}
+                return {
+                    "tool_results": [
+                        *state.tool_results,
+                        {"tool": task.name, "output": f"Error: {e}"},
+                    ]
+                }
         else:
             # 工具不存在，回退到 LLM 生成
             result = await ai_manager.chat(
                 state.provider,
                 [
-                    {"role": "system", "content": "你是电商智能客服。请根据用户问题提供详细、准确的回答。"},
-                    *[{"role": {"human": "user", "ai": "assistant", "system": "system"}.get(m.type, m.type), "content": m.content} for m in state.messages],
+                    {
+                        "role": "system",
+                        "content": "你是电商智能客服。请根据用户问题提供详细、准确的回答。",
+                    },
+                    *[
+                        {
+                            "role": {"human": "user", "ai": "assistant", "system": "system"}.get(
+                                m.type, m.type
+                            ),
+                            "content": m.content,
+                        }
+                        for m in state.messages
+                    ],
                 ],
             )
             return {"tool_results": [*state.tool_results, {"tool": "llm", "output": result[:500]}]}
@@ -174,8 +202,19 @@ async def responder_node(state: AgentState) -> dict[str, Any]:
                     "role": "system",
                     "content": "你是电商智能客服。请基于以下信息，生成友好、专业的最终回复。",
                 },
-                *[{"role": {"human": "user", "ai": "assistant", "system": "system"}.get(m.type, m.type), "content": m.content} for m in state.messages],
-                {"role": "assistant", "content": f"执行结果：{state.tool_results[-1].get('output', '') if state.tool_results else '无'}"},
+                *[
+                    {
+                        "role": {"human": "user", "ai": "assistant", "system": "system"}.get(
+                            m.type, m.type
+                        ),
+                        "content": m.content,
+                    }
+                    for m in state.messages
+                ],
+                {
+                    "role": "assistant",
+                    "content": f"执行结果：{state.tool_results[-1].get('output', '') if state.tool_results else '无'}",
+                },
             ],
             temperature=0.7,
             max_tokens=1024,

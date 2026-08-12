@@ -1,4 +1,5 @@
 """工具注册与发现。"""
+
 from __future__ import annotations
 
 from app.tools.datetime_tool import DateTimeTool

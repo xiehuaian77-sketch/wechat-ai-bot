@@ -1,4 +1,5 @@
 """检查 RAG 知识库。"""
+
 import sys
 from pathlib import Path
 

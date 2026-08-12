@@ -1,4 +1,5 @@
 """API 端点集成测试。"""
+
 from __future__ import annotations
 
 import uuid
@@ -52,7 +53,9 @@ async def test_knowledge_search_requires_auth(client: AsyncClient):
 @pytest.mark.anyio
 async def test_admin_whitelist_requires_admin(client: AsyncClient):
     # 先登录获取 customer token
-    login_resp = await client.post("/api/auth/login", json={"wechat_id": f"user_{uuid.uuid4().hex[:8]}", "nickname": "User"})
+    login_resp = await client.post(
+        "/api/auth/login", json={"wechat_id": f"user_{uuid.uuid4().hex[:8]}", "nickname": "User"}
+    )
     token = login_resp.json()["access_token"]
     headers = {"Authorization": f"Bearer {token}"}
     resp = await client.get("/api/admin/whitelist", headers=headers)

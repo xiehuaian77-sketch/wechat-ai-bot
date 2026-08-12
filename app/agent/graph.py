@@ -1,4 +1,5 @@
 """LangGraph Agent 图构建。"""
+
 from __future__ import annotations
 
 from langgraph.graph import END, StateGraph

@@ -1,4 +1,5 @@
 """Agent 引擎运行时。"""
+
 from __future__ import annotations
 
 import json
@@ -54,7 +55,9 @@ class AgentEngine:
         self._app = graph.compile()
         logger.info("Agent graph compiled")
 
-    async def run(self, messages: list[dict[str, str]], provider: str = "openai", **kwargs: Any) -> dict[str, Any]:
+    async def run(
+        self, messages: list[dict[str, str]], provider: str = "openai", **kwargs: Any
+    ) -> dict[str, Any]:
         """运行 Agent。
 
         Args:
@@ -121,13 +124,17 @@ class AgentEngine:
             latency_ms = int((time.perf_counter() - start_time) * 1000)
 
             tool_results = result.get("tool_results", [])
-            tool_success_count = sum(1 for r in tool_results if not str(r.get("output", "")).startswith("Error"))
+            tool_success_count = sum(
+                1 for r in tool_results if not str(r.get("output", "")).startswith("Error")
+            )
             tool_success_rate = tool_success_count / len(tool_results) if tool_results else 1.0
 
             # 人机协同：如果被拦截，直接返回拦截信息
             if result.get("blocked"):
                 return {
-                    "final_answer": result.get("tool_results", [{}])[-1].get("output", "操作需要人工审批"),
+                    "final_answer": result.get("tool_results", [{}])[-1].get(
+                        "output", "操作需要人工审批"
+                    ),
                     "tool_results": result.get("tool_results", []),
                     "iterations": result.get("iteration", 0),
                     "plan": [{"type": s.type, "name": s.name} for s in result.get("plan", [])],

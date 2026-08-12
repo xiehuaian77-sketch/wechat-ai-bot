@@ -1,4 +1,5 @@
 """JWT 认证与权限管理。"""
+
 from __future__ import annotations
 
 import hashlib
@@ -35,6 +36,7 @@ security = HTTPBearer()
 
 class TokenData(BaseModel):
     """Token 解析后的负载。"""
+
     user_id: uuid.UUID
     wechat_id: str
     role: Literal["customer", "agent", "admin"]
