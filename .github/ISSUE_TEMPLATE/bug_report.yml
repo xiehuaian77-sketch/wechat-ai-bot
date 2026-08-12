@@ -1,0 +1,76 @@
+name: 🐛 Bug Report
+description: 报告项目中遇到的错误或问题
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢你花时间报告问题！请填写以下信息帮助我们快速定位问题。
+
+  - type: input
+    id: version
+    attributes:
+      label: 版本
+      description: 你正在使用的项目版本（commit hash 或 tag）
+      placeholder: "v0.1.0"
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: 运行环境
+      description: 操作系统、Python 版本、部署方式等
+      placeholder: "Ubuntu 22.04, Python 3.12, Docker"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+      description: 清晰简洁地描述你遇到的问题
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 告诉我们如何复现这个问题
+      placeholder: |
+        1. 启动服务 `...`
+        2. 调用 API `...`
+        3. 出现错误 `...`
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望行为
+      description: 清晰简洁地描述你期望发生什么
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际行为
+      description: 清晰简洁地描述实际发生了什么
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志/错误信息
+      description: 粘贴相关的日志或错误堆栈（如有）
+      render: shell
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 补充信息
+      description: 添加任何其他你认为有帮助的信息

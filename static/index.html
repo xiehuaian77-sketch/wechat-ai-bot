@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WeChat AI Bot - 管理面板</title>
+<style>
+  :root{
+    --bg:#0f172a;
+    --card:rgba(255,255,255,0.08);
+    --card-2:rgba(255,255,255,0.12);
+    --text:#e2e8f0;
+    --muted:#94a3b8;
+    --accent:#22d3ee;
+    --accent-2:#a78bfa;
+    --success:#34d399;
+    --warn:#fbbf24;
+    --danger:#f87171;
+    --border:rgba(255,255,255,0.10);
+    --shadow:0 10px 30px rgba(0,0,0,0.35);
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans SC",sans-serif;
+    background:
+      radial-gradient(1200px 800px at 10% 10%, rgba(34,211,238,0.18), transparent),
+      radial-gradient(1000px 700px at 90% 20%, rgba(167,139,250,0.18), transparent),
+      radial-gradient(900px 600px at 50% 90%, rgba(52,211,153,0.15), transparent),
+      #0f172a;
+    color:var(--text);
+    min-height:100vh;
+  }
+  header{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:saturate(140%) blur(14px);
+    background:rgba(15,23,42,0.55);
+    border-bottom:1px solid var(--border);
+    padding:14px 18px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .brand{
+    display:flex;align-items:center;gap:10px;
+    font-weight:700;letter-spacing:0.2px;
+  }
+  .brand .logo{
+    width:32px;height:32px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    display:grid;place-items:center;color:#0f172a;font-weight:800;
+  }
+  .pill{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:6px 10px;border-radius:999px;
+    background:var(--card-2);border:1px solid var(--border);
+    color:var(--muted);font-size:12px;
+  }
+  main{
+    max-width:1100px;margin:18px auto;padding:0 14px 40px;
+    display:grid;gap:14px;
+  }
+  .grid{display:grid;gap:14px;}
+  @media (min-width: 860px){
+    .grid-2{grid-template-columns: 1fr 1fr;}
+    .grid-3{grid-template-columns: 1fr 1fr 1fr;}
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:16px;
+  }
+  .card h3{
+    margin:0 0 10px;font-size:14px;color:var(--muted);font-weight:500;letter-spacing:0.4px;
+  }
+  .input{
+    width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--border);
+    background:rgba(15,23,42,0.45);color:var(--text);outline:none;
+  }
+  .input:focus{border-color:rgba(34,211,238,0.5)}
+  textarea.input{min-height:90px;resize:vertical}
+  .btn{
+    border:0;border-radius:12px;padding:10px 14px;color:#0f172a;font-weight:600;cursor:pointer;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  }
+  .btn.secondary{
+    background:linear-gradient(135deg,rgba(255,255,255,0.12),rgba(255,255,255,0.18));
+    color:var(--text);
+  }
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .tag{
+    padding:4px 8px;border-radius:999px;font-size:12px;
+    background:rgba(34,211,238,0.12);color:var(--accent);border:1px solid rgba(34,211,238,0.25);
+  }
+  .tag.danger{background:rgba(248,113,113,0.12);color:var(--danger);border-color:rgba(248,113,113,0.25)}
+  .tag.ok{background:rgba(52,211,153,0.12);color:var(--success);border-color:rgba(52,211,153,0.25)}
+  .log{
+    background:rgba(15,23,42,0.45);border:1px solid var(--border);border-radius:14px;
+    padding:10px;min-height:120px;max-height:260px;overflow:auto;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Noto Sans Mono",monospace;
+    font-size:12px;line-height:1.6;color:#cbd5e1;white-space:pre-wrap;
+  }
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tab{
+    padding:8px 10px;border-radius:12px;border:1px solid var(--border);
+    background:var(--card);color:var(--muted);cursor:pointer;
+  }
+  .tab.active{background:var(--card-2);color:var(--text)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:8px 6px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+  th{color:var(--muted);font-weight:500}
+  .empty{color:var(--muted);font-size:13px;padding:10px 2px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">W</div>
+    <div>WeChat AI Bot <span style="color:var(--muted);font-weight:500">管理面板</span></div>
+  </div>
+  <div class="row">
+    <div class="pill" id="serverStatus">检测中...</div>
+    <button class="btn secondary" onclick="location.href='/docs'">API Docs</button>
+  </div>
+</header>
+
+<main>
+  <section class="grid grid-2">
+    <!-- 对话测试 -->
+    <div class="card">
+      <h3>💬 对话测试</h3>
+      <div class="row" style="margin-bottom:8px">
+        <input id="chatUser" class="input" placeholder="user_id" value="admin" style="max-width:160px"/>
+        <input id="chatSession" class="input" placeholder="session_id" value="panel" style="max-width:220px"/>
+      </div>
+      <textarea id="chatContent" class="input" placeholder="输入消息，测试 AI 回复...">你好，请用一句话介绍你自己</textarea>
+      <div class="row" style="margin-top:10px;justify-content:space-between">
+        <div class="row">
+          <span class="tag" id="chatLatency">延迟: -</span>
+          <span class="tag" id="chatModel">模型: -</span>
+        </div>
+        <button class="btn" id="chatSend">发送</button>
+      </div>
+      <div class="log" id="chatLog">等待发送...</div>
+    </div>
+
+    <!-- 聊天历史 -->
+    <div class="card">
+      <h3>🕒 聊天历史</h3>
+      <div class="row" style="margin-bottom:8px">
+        <input id="histUser" class="input" placeholder="user_id" value="admin" style="max-width:160px"/>
+        <input id="histSession" class="input" placeholder="session_id" value="panel" style="max-width:220px"/>
+        <input id="histLimit" class="input" placeholder="条数" type="number" value="20" min="1" max="100" style="max-width:90px"/>
+        <button class="btn secondary" id="histRefresh">刷新</button>
+      </div>
+      <div class="log" id="histBox">
+        <div class="empty">暂无历史</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid grid-2">
+    <!-- 白名单 -->
+    <div class="card">
+      <h3>🛡️ 管理员白名单</h3>
+      <div class="row" style="margin-bottom:8px">
+        <input id="wlInput" class="input" placeholder="输入微信 ID，多个用逗号分隔" />
+        <button class="btn" id="wlSave">保存</button>
+      </div>
+      <div class="row" id="wlTags" style="gap:8px">
+        <span class="empty">加载中...</span>
+      </div>
+    </div>
+
+    <!-- 黑名单 -->
+    <div class="card">
+      <h3>🚫 群黑名单</h3>
+      <div class="row" style="margin-bottom:8px">
+        <input id="blInput" class="input" placeholder="输入群 ID，多个用逗号分隔" />
+        <button class="btn" id="blSave">保存</button>
+      </div>
+      <div class="row" id="blTags" style="gap:8px">
+        <span class="empty">加载中...</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>🧪 端点自检</h3>
+    <div class="row" style="gap:8px;flex-wrap:wrap">
+      <button class="btn secondary" data-url="/health">/health</button>
+      <button class="btn secondary" data-url="/hook/wechat/test">/hook/wechat/test</button>
+      <button class="btn secondary" data-url="/api/chat/history?user_id=admin&session_id=panel">/api/chat/history</button>
+      <button class="btn secondary" data-url="/api/admin/whitelist">/api/admin/whitelist</button>
+      <button class="btn secondary" data-url="/api/admin/blacklist">/api/admin/blacklist</button>
+    </div>
+    <div class="log" id="diagBox" style="margin-top:10px">点击按钮检测端点状态...</div>
+  </section>
+</main>
+
+<script>
+const $ = (s)=>document.querySelector(s);
+const API_BASE = window.location.origin;
+
+function setText(el, html){ if(el) el.innerHTML = html; }
+function time(){ return new Date().toLocaleTimeString(); }
+
+async function checkServer(){
+  const el = $('#serverStatus');
+  try{
+    const r = await fetch(`${API_BASE}/health`, {signal: AbortSignal.timeout?.(4000)});
+    const ok = r.ok;
+    setText(el, `<span class="tag ${ok?'ok':'danger'}">服务${ok?'正常':'异常'}</span>`);
+    return ok;
+  }catch(e){
+    setText(el, `<span class="tag danger">不可达</span>`);
+    return false;
+  }
+}
+
+async function loadWhitelist(){
+  const box = $('#wlTags');
+  try{
+    const r = await fetch(`${API_BASE}/api/admin/whitelist`);
+    const j = await r.json();
+    const items = j.whitelist || [];
+    if(!items.length){ setText(box, '<span class="empty">空</span>'); return; }
+    setText(box, items.map(x=>`<span class="tag ok">${x}</span>`).join(''));
+  }catch(e){ setText(box, '<span class="empty">加载失败</span>'); }
+}
+
+async function loadBlacklist(){
+  const box = $('#blTags');
+  try{
+    const r = await fetch(`${API_BASE}/api/admin/blacklist`);
+    const j = await r.json();
+    const items = j.blacklist || [];
+    if(!items.length){ setText(box, '<span class="empty">空</span>'); return; }
+    setText(box, items.map(x=>`<span class="tag danger">${x}</span>`).join(''));
+  }catch(e){ setText(box, '<span class="empty">加载失败</span>'); }
+}
+
+async function loadHistory(){
+  const user = $('#histUser').value.trim();
+  const session = $('#histSession').value.trim();
+  const limit = parseInt($('#histLimit').value || '20', 10);
+  const box = $('#histBox');
+  if(!user || !session){ setText(box, '<div class="empty">请填写 user_id 和 session_id</div>'); return; }
+  setText(box, '加载中...');
+  try{
+    const url = `${API_BASE}/api/chat/history?user_id=${encodeURIComponent(user)}&session_id=${encodeURIComponent(session)}&limit=${limit}`;
+    const r = await fetch(url);
+    const j = await r.json();
+    const msgs = j.messages || [];
+    if(!msgs.length){ setText(box, '<div class="empty">暂无消息</div>'); return; }
+    setText(box, msgs.map(m=>{
+      const role = m.role==='user'?'👤 用户':'🤖 AI';
+      const meta = m.model ? ` <span style="color:var(--muted)">[${m.model}]</span>` : '';
+      return `<div><div style="color:var(--muted);font-size:12px">${time()} ${role}${meta}</div><div>${m.content}</div></div>`;
+    }).join('<hr style="border-color:var(--border)">'));
+  }catch(e){ setText(box, `<div class="empty">${e.message}</div>`); }
+}
+
+async function sendChat(){
+  const user = $('#chatUser').value.trim();
+  const session = $('#chatSession').value.trim();
+  const content = $('#chatContent').value.trim();
+  const log = $('#chatLog');
+  const latency = $('#chatLatency');
+  const model = $('#chatModel');
+  if(!content){ log.textContent = '请输入消息'; return; }
+  log.textContent = '发送中...';
+  const t0 = performance.now();
+  try{
+    const r = await fetch(`${API_BASE}/api/chat`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({user_id:user, session_id:session, content})
+    });
+    const ms = Math.round(performance.now()-t0);
+    const j = await r.json();
+    if(!r.ok){ throw new Error(`HTTP ${r.status}: ${JSON.stringify(j)}`); }
+    latency.textContent = `延迟: ${ms}ms`;
+    model.textContent = `模型: ${j.model || 'custom'}`;
+    log.textContent = `[${time()}] 你: ${content}\n[${time()}] AI: ${j.content}`;
+  }catch(e){
+    latency.textContent = '延迟: -';
+    log.textContent = `错误: ${e.message}`;
+  }
+}
+
+async function saveList(path, inputId, boxId){
+  const raw = document.getElementById(inputId).value.trim();
+  const items = raw ? raw.split(/[,，]/).map(s=>s.trim()).filter(Boolean) : [];
+  const r = await fetch(`${API_BASE}${path}`, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(items)
+  });
+  const j = await r.json();
+  if(!r.ok){ alert(`保存失败: ${JSON.stringify(j)}`); return; }
+  document.getElementById(inputId).value = '';
+  if(path.includes('whitelist')) loadWhitelist(); else loadBlacklist();
+}
+
+function bindDiagnostics(){
+  document.querySelectorAll('[data-url]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const box = $('#diagBox');
+      const url = btn.getAttribute('data-url');
+      const full = url.startsWith('http') ? url : `${API_BASE}${url}`;
+      box.textContent = `请求 ${full} ...`;
+      const t0 = performance.now();
+      try{
+        const r = await fetch(full);
+        const ms = Math.round(performance.now()-t0);
+        const txt = await r.text();
+        let pretty = txt;
+        try{ pretty = JSON.stringify(JSON.parse(txt), null, 2); }catch(e){}
+        box.textContent = `HTTP ${r.status} · ${ms}ms\n${pretty}`;
+      }catch(e){ box.textContent = `错误: ${e.message}`; }
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', async ()=>{
+  const ok = await checkServer();
+  if(ok){
+    loadWhitelist();
+    loadBlacklist();
+    loadHistory();
+  }
+  $('#chatSend').addEventListener('click', sendChat);
+  $('#histRefresh').addEventListener('click', loadHistory);
+  $('#wlSave').addEventListener('click', ()=>saveList('/api/admin/whitelist','wlInput','wlTags'));
+  $('#blSave').addEventListener('click', ()=>saveList('/api/admin/blacklist','blInput','blTags'));
+  bindDiagnostics();
+});
+</script>
+</body>
+</html>
