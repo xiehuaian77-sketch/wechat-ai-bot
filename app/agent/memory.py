@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from typing import Any
 
 from app.database.models import Conversation, Message
-from app.database.session import get_session
+from app.database.session import session_scope
 from app.utils.logger import logger
 
 
@@ -23,7 +23,7 @@ class AgentMemory:
     ) -> None:
         """保存消息到数据库。"""
         try:
-            async for session in get_session():
+            async with session_scope() as session:
                 conv = Conversation(
                     user_id=user_id,
                     session_id=session_id,
@@ -40,7 +40,6 @@ class AgentMemory:
                 )
                 session.add(msg)
                 await session.commit()
-                break
         except Exception as e:
             logger.error(f"Save message error: {e}")
 
@@ -50,7 +49,7 @@ class AgentMemory:
         """获取对话历史。"""
         result = []
         try:
-            async for session in get_session():
+            async with session_scope() as session:
                 from sqlalchemy import select
 
                 from app.database.models import Conversation
@@ -80,7 +79,6 @@ class AgentMemory:
                     result = [
                         {"role": m.role, "content": m.content, "model": m.model} for m in msgs
                     ]
-                break
         except Exception as e:
             logger.error(f"Get history error: {e}")
         return result

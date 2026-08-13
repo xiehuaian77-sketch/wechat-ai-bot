@@ -12,7 +12,7 @@ os.environ.setdefault("APP_ENV", "testing")
 os.environ.setdefault("DATABASE_URL", "sqlite+aiosqlite:///:memory:")
 os.environ.setdefault("REDIS_ENABLED", "false")
 
-from app.database.session import Base, engine, get_session
+from app.database.session import Base, engine, session_scope
 from app.main import create_app
 
 
@@ -41,5 +41,5 @@ async def client(app):
 @pytest.fixture
 async def db_session(app):
     _ = app  # suppress unused argument warning
-    async for session in get_session():
+    async with session_scope() as session:
         yield session

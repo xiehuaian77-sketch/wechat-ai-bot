@@ -11,7 +11,7 @@ from typing import Any
 from sqlalchemy import select
 
 from app.database.models import Conversation, KnowledgeDocument, User
-from app.database.session import get_session
+from app.database.session import session_scope
 
 
 class UserMemory:
@@ -20,7 +20,7 @@ class UserMemory:
     @staticmethod
     async def get_user_memory(user_id: str) -> dict[str, Any]:
         """获取用户长期记忆（偏好、历史问题、画像）。"""
-        async with get_session() as session:
+        async with session_scope() as session:
             result = await session.execute(select(User).where(User.id == user_id))
             user = result.scalar_one_or_none()
             if not user:
@@ -37,7 +37,7 @@ class UserMemory:
     @staticmethod
     async def get_conversation_context(conversation_id: str) -> dict[str, Any]:
         """获取对话上下文（用户画像、当前场景、意图等）。"""
-        async with get_session() as session:
+        async with session_scope() as session:
             result = await session.execute(
                 select(Conversation).where(Conversation.id == conversation_id)
             )
@@ -52,7 +52,7 @@ class UserMemory:
             }
             if conv.context:
                 with suppress(json.JSONDecodeError):
-                    context.update(json.loads(conv.context))
+                    context.update(json.loads(str(conv.context)))
             return context
 
 
@@ -62,7 +62,7 @@ class KnowledgeBase:
     @staticmethod
     async def search(query: str, top_k: int = 3) -> list[dict[str, Any]]:
         """检索知识库（简单关键词匹配）。"""
-        async with get_session() as session:
+        async with session_scope() as session:
             result = await session.execute(
                 select(KnowledgeDocument)
                 .where(KnowledgeDocument.content.contains(query))
@@ -74,7 +74,7 @@ class KnowledgeBase:
     @staticmethod
     async def get_by_id(doc_id: str) -> dict[str, Any] | None:
         """获取知识库文档详情。"""
-        async with get_session() as session:
+        async with session_scope() as session:
             result = await session.execute(
                 select(KnowledgeDocument).where(KnowledgeDocument.id == doc_id)
             )

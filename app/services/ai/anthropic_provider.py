@@ -41,11 +41,13 @@ class AnthropicProvider(BaseAIProvider):
         response = await self.client.messages.create(
             model=settings.ANTHROPIC_MODEL,
             system=system_message,
-            messages=chat_messages,
+            messages=chat_messages,  # type: ignore[arg-type]
             max_tokens=4096,
             **kwargs,
         )
-        return response.content[0].text if response.content else ""
+        content = response.content[0] if response.content else None
+        # SDK 返回 TextBlock 联合类型，运行期保证为 TextBlock
+        return content.text if content else ""  # type: ignore[union-attr]
 
     async def stream_chat(self, messages: list[dict[str, str]], **kwargs: Any):
         system_message = ""
@@ -56,10 +58,11 @@ class AnthropicProvider(BaseAIProvider):
             else:
                 chat_messages.append(msg)
 
-        with self.client.messages.stream(
+        # 注意：AsyncAnthropic 必须使用 async with 打开流
+        async with self.client.messages.stream(
             model=settings.ANTHROPIC_MODEL,
             system=system_message,
-            messages=chat_messages,
+            messages=chat_messages,  # type: ignore[arg-type]
             max_tokens=4096,
             **kwargs,
         ) as stream:

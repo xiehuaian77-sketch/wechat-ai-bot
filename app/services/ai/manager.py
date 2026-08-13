@@ -41,7 +41,7 @@ class AIManager:
         provider_name: str,
         messages: list[dict[str, str]],
         model: str | None = None,
-        **kwargs: dict,
+        **kwargs: Any,
     ):
         """发送聊天请求。"""
         provider = self.get_provider(provider_name, model)
@@ -55,7 +55,7 @@ class AIManager:
         provider_name: str,
         messages: list[dict[str, str]],
         model: str | None = None,
-        **kwargs: dict,
+        **kwargs: Any,
     ):
         """流式聊天。"""
         provider = self.get_provider(provider_name, model)

@@ -103,7 +103,7 @@ async def executor_node(state: AgentState) -> dict[str, Any]:
         return {"current_task": None, "tool_results": state.tool_results}
 
     # 人机协同检查：对所有步骤进行风险评估（不只是 tool）
-    last_msg = state.messages[-1].content if state.messages else ""
+    last_msg = str(state.messages[-1].content) if state.messages else ""
     risk_level = human_in_the_loop.assess_risk(last_msg, tool_name=task.name)
     if human_in_the_loop.requires_manual_approval(risk_level):
         logger.info(f"Human-in-the-loop: blocking {task.name} (risk={risk_level.value})")
@@ -124,9 +124,9 @@ async def executor_node(state: AgentState) -> dict[str, Any]:
         tool = tool_manager.get(task.name)
         if tool:
             try:
-                # 构造工具输入（简化：直接用最后一条消息）
-                last_msg = state.messages[-1].content if state.messages else ""
-                result = await tool.run(last_msg)
+                # 构造工具输入（简化：直接执行工具默认逻辑）
+                last_msg = str(state.messages[-1].content) if state.messages else ""
+                result = await tool.execute(message=last_msg)
                 return {
                     "tool_results": [
                         *state.tool_results,
@@ -155,7 +155,7 @@ async def executor_node(state: AgentState) -> dict[str, Any]:
                             "role": {"human": "user", "ai": "assistant", "system": "system"}.get(
                                 m.type, m.type
                             ),
-                            "content": m.content,
+                            "content": str(m.content),
                         }
                         for m in state.messages
                     ],
@@ -207,7 +207,7 @@ async def responder_node(state: AgentState) -> dict[str, Any]:
                         "role": {"human": "user", "ai": "assistant", "system": "system"}.get(
                             m.type, m.type
                         ),
-                        "content": m.content,
+                        "content": str(m.content),
                     }
                     for m in state.messages
                 ],

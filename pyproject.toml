@@ -56,9 +56,6 @@ dependencies = [
     "python-docx>=1.2.0",
     "openpyxl>=3.1.5",
     # ---- Development ----
-    "pytest>=8.3.0",
-    "pytest-asyncio>=0.24.0",
-    "httpx>=0.28.0",
     "sentry-sdk>=2.67.1",
 ]
 
@@ -110,6 +107,10 @@ ignore = [
     "RUF003",  # fullwidth comment chars
 ]
 
+# 测试文件的 mock 需要保持接口签名兼容，未使用参数是合理设计
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["ARG001", "ARG002", "ARG005"]
+
 [tool.ruff.lint.isort]
 known-first-party = ["app", "config", "tests"]
 
@@ -132,26 +133,5 @@ markers = [
 [tool.mypy]
 ignore_missing_imports = true
 
-[[tool.mypy.overrides]]
-module = "app.services.ai.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "app.agent.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "app.knowledge.vector_store"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "app.api.router"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "app.context"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "app.services.message.handler"
-ignore_errors = true
+# 说明：核心模块（ai / agent / knowledge / api / context / message handler）
+# 已全部通过严格类型检查，无需 ignore_errors 覆盖。

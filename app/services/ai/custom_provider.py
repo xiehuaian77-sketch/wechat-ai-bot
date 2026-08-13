@@ -45,7 +45,7 @@ class CustomProvider(BaseAIProvider):
         try:
             response = await self.client.chat.completions.create(
                 model=self._model,
-                messages=messages,
+                messages=messages,  # type: ignore[arg-type]
                 temperature=kwargs.get("temperature", 0.7),
                 max_tokens=kwargs.get("max_tokens", 2048),
                 **{k: v for k, v in kwargs.items() if k not in ("temperature", "max_tokens")},
@@ -62,13 +62,13 @@ class CustomProvider(BaseAIProvider):
         try:
             stream = await self.client.chat.completions.create(
                 model=self._model,
-                messages=messages,
+                messages=messages,  # type: ignore[arg-type]
                 stream=True,
                 temperature=kwargs.get("temperature", 0.7),
                 max_tokens=kwargs.get("max_tokens", 2048),
                 **{k: v for k, v in kwargs.items() if k not in ("temperature", "max_tokens")},
             )
-            async for chunk in stream:
+            async for chunk in stream:  # type: ignore[union-attr]
                 if chunk.choices[0].delta.content:
                     yield chunk.choices[0].delta.content
         except Exception as e:

@@ -13,6 +13,7 @@ class TaskStep(BaseModel):
 
     type: Literal["tool", "think"] = Field(..., description="步骤类型")
     name: str = Field(..., description="工具名称或推理内容")
+    description: str | None = Field(default=None, description="步骤描述")
     status: Literal["pending", "running", "done", "failed"] = Field(
         default="pending", description="步骤状态"
     )

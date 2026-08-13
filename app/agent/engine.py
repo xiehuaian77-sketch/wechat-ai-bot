@@ -24,7 +24,8 @@ class AgentEngine:
 
     def __init__(self) -> None:
         self._graph: StateGraph | None = None
-        self._app = None
+        # LangGraph 编译产物类型复杂，统一按 Any 处理
+        self._app: Any = None
 
     def _build(self) -> None:
         """构建并编译 Agent 图（懒加载）。"""
@@ -82,7 +83,7 @@ class AgentEngine:
         # 转换为 LangChain 消息格式
         from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
-        lc_messages = []
+        lc_messages: list[Any] = []
         for msg in messages:
             if msg["role"] == "user":
                 lc_messages.append(HumanMessage(content=msg["content"]))
@@ -107,7 +108,7 @@ class AgentEngine:
         else:
             lc_messages = [SystemMessage(content=augmented_system), *lc_messages]
 
-        initial_state: AgentState = {
+        initial_state = {
             "messages": lc_messages,
             "plan": [],
             "current_task": None,

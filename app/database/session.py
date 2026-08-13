@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from sqlalchemy.ext.asyncio import (
@@ -44,6 +45,7 @@ class Base(DeclarativeBase):
 
 
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
+    """FastAPI 依赖注入用（yield 形式，Depends 需要）。"""
     async with async_session() as session:
         try:
             yield session
@@ -53,4 +55,16 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
             raise
 
 
-__all__ = ["Base", "async_session", "engine", "get_session"]
+@asynccontextmanager
+async def session_scope() -> AsyncGenerator[AsyncSession, None]:
+    """业务代码内直接使用（async with 形式）。"""
+    async with async_session() as session:
+        try:
+            yield session
+            await session.commit()
+        except Exception:
+            await session.rollback()
+            raise
+
+
+__all__ = ["Base", "async_session", "engine", "get_session", "session_scope"]

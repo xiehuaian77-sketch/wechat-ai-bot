@@ -20,6 +20,10 @@ class ToolManager:
         self._registry.register(tool)
         logger.info(f"Tool registered: {tool.name}")
 
+    def get(self, tool_name: str) -> Any | None:
+        """按名称获取工具实例（不存在返回 None）。"""
+        return self._registry.get(tool_name)
+
     async def execute(self, tool_name: str, arguments: dict[str, Any]) -> Any:
         """执行指定工具。"""
         tool = self._registry.get(tool_name)

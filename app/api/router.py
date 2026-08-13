@@ -114,8 +114,17 @@ async def login(
 ) -> LoginResponse:
     """微信用户登录（获取 JWT Token）。"""
     user = await _get_or_create_user(session, request.wechat_id, request.nickname)
-    token = create_access_token(user.id, user.wechat_id, user.role)
-    return LoginResponse(access_token=token, role=user.role, user_id=str(user.id))
+    # SQLAlchemy 老式 Column 声明导致 mypy 推断为 Column[X]；运行期为标量值
+    token = create_access_token(
+        user.id,  # type: ignore[arg-type]
+        user.wechat_id,  # type: ignore[arg-type]
+        user.role,  # type: ignore[arg-type]
+    )
+    return LoginResponse(
+        access_token=token,
+        role=user.role,  # type: ignore[arg-type]
+        user_id=str(user.id),
+    )
 
 
 # ============================================================================
@@ -185,10 +194,10 @@ async def chat_message(
     user = await _get_or_create_user(session, request.user_id, getattr(request, "nickname", None))
 
     # 2. 获取或创建会话
-    conv = await _get_or_create_conversation(session, user.id, request.session_id)
+    conv = await _get_or_create_conversation(session, user.id, request.session_id)  # type: ignore[arg-type]
 
     # 3. 保存用户消息
-    await _save_message(session, conv.id, "user", request.content)
+    await _save_message(session, conv.id, "user", request.content)  # type: ignore[arg-type]
 
     try:
         # 上下文工程：注入用户记忆 + 知识库检索
@@ -221,7 +230,7 @@ async def chat_message(
         # 保存 AI 回复
         await _save_message(
             session,
-            conv.id,
+            conv.id,  # type: ignore[arg-type]
             "assistant",
             reply,
             model=model_used,
@@ -298,7 +307,7 @@ async def get_whitelist(
 async def update_whitelist(
     wxids: list[str],
     _current_user: User = Depends(require_admin),
-) -> dict[str, str]:
+) -> dict[str, str | int]:
     """更新管理员白名单。"""
     import pathlib
 
@@ -340,7 +349,7 @@ async def get_blacklist(
 async def update_blacklist(
     group_ids: list[str],
     _current_user: User = Depends(require_admin),
-) -> dict[str, str]:
+) -> dict[str, str | int]:
     """更新群黑名单。"""
     import pathlib
 
@@ -465,15 +474,15 @@ async def resolve_ticket(
     if ticket is None:
         raise HTTPException(status_code=404, detail="Ticket not found")
 
-    ticket.status = "resolved"
-    ticket.resolution = request.get("resolution")
-    ticket.resolved_at = datetime.utcnow()
+    ticket.status = "resolved"  # type: ignore[assignment]
+    ticket.resolution = request.get("resolution")  # type: ignore[assignment]
+    ticket.resolved_at = datetime.utcnow()  # type: ignore[assignment]
     await session.flush()
 
     # 审计日志
     await _create_audit_log(
         session,
-        actor_id=_current_user.id,
+        actor_id=_current_user.id,  # type: ignore[arg-type]
         action="resolve",
         resource_type="ticket",
         resource_id=str(ticket.id),
@@ -512,7 +521,7 @@ async def request_manual_approval(
 
     return await human_in_the_loop.create_approval_request(
         session=session,
-        user_id=user_id,
+        user_id=user_id,  # type: ignore[arg-type]
         conversation_id=conversation_id,
         action=request.action,
         details=request.details,

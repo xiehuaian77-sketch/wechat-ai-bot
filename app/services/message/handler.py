@@ -187,8 +187,11 @@ async def handle_battle_mode(wxid: str, content: str, room_id: str | None) -> No
             return_exceptions=True,
         )
 
-        reply_a = results[0].result() if not isinstance(results[0], Exception) else str(results[0])
-        reply_b = results[1].result() if not isinstance(results[1], Exception) else str(results[1])
+        # gather 已 await coroutine，结果为字符串或异常对象
+        reply_a = results[0] if not isinstance(results[0], Exception) else str(results[0])
+        reply_b = results[1] if not isinstance(results[1], Exception) else str(results[1])
+        reply_a = reply_a if isinstance(reply_a, str) else str(reply_a)
+        reply_b = reply_b if isinstance(reply_b, str) else str(reply_b)
 
         response = f"⚔️ Battle Mode\n\n🤖 {model_a}:\n{reply_a[:200]}...\n\n🤖 {model_b}:\n{reply_b[:200]}...\n\n请回复 A 或 B 投票！"
         await send_wechat_message(wxid, response, room_id)

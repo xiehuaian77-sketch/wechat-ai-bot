@@ -128,6 +128,7 @@ class KnowledgeDocument(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     title = Column(String(256), nullable=False, index=True)
+    content = Column(Text, nullable=False, default="")  # 文档全文 / 摘要
     source = Column(String(512), nullable=True)
     category = Column(String(64), nullable=True, index=True)
     chunk_count = Column(Integer, default=0)

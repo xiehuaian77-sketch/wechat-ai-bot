@@ -21,7 +21,7 @@ jobs:
           version: "latest"
 
       - name: Install dependencies
-        run: uv sync --frozen
+        run: uv sync --frozen --extra dev
 
       - name: Lint (ruff)
         run: uv run ruff check app/ tests/
@@ -54,7 +54,7 @@ jobs:
           version: "latest"
 
       - name: Install dependencies
-        run: uv sync --frozen
+        run: uv sync --frozen --extra dev
 
       - name: Check dependencies for vulnerabilities
         run: uv run pip audit
@@ -99,12 +99,12 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
         if: secrets.DOCKERHUB_USERNAME != ''
 
-      - name: Build and push
+      - name: Build image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
           push: false
-          tags: your-username/wechat-ai-bot:latest
-          cache-from: type=registry,ref=your-username/wechat-ai-bot:buildcache
-          cache-to: type=registry,ref=your-username/wechat-ai-bot:buildcache,mode=max
+          tags: wechat-ai-bot:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
